@@ -9,3 +9,4 @@ main.wrap>.seo-breadcrumbs{width:100%}
 .cms-article-body ul{padding-left:24px;line-height:1.8}
 .cms-content>article>h1{padding-top:24px}
 @media(max-width:760px){.seo-breadcrumbs{font-size:12px;padding-top:16px}.search-answers>h2{font-size:32px}}
+.search-answers summary>span{display:none}
