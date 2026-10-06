@@ -121,4 +121,6 @@ for slug, (title, description, content) in pages.items():
 print(f'Updated landing navigation and generated {len(pages)} detail pages.')
 
 runpy.run_path(str(Path(__file__).with_name("connect-cms.py")))["connect"](root)
+runpy.run_path(str(Path(__file__).with_name("export-published.py")))["apply"](root)
+runpy.run_path(str(Path(__file__).with_name("search-content.py")))["apply"](root)
 runpy.run_path(str(Path(__file__).with_name("seo.py")))["apply"](root)
