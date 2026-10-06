@@ -1,0 +1,11 @@
+.seo-breadcrumbs{padding-top:24px;padding-bottom:16px;font-size:13px;line-height:1.7;color:#414d6b;overflow-wrap:anywhere}
+.seo-breadcrumbs a{text-decoration:underline;text-underline-offset:3px}
+main.wrap>.seo-breadcrumbs{width:100%}
+.search-answers>h2{margin-bottom:28px}
+.search-answers>.faq-list{max-width:900px;margin:0 0 28px}
+.search-answers details p{padding:16px 0 24px;max-width:75ch}
+.article-byline{font-size:14px;margin:24px 0;color:#414d6b}
+.article-byline a{text-decoration:underline}
+.cms-article-body ul{padding-left:24px;line-height:1.8}
+.cms-content>article>h1{padding-top:24px}
+@media(max-width:760px){.seo-breadcrumbs{font-size:12px;padding-top:16px}.search-answers>h2{font-size:32px}}
