@@ -69,7 +69,6 @@ def apply(root):
                 post = articles[route]
                 schema = {'@context': 'https://schema.org', '@type': 'BlogPosting', '@id': url + '#article', 'headline': post['title'], 'description': post['summary'], 'datePublished': post['created_at'], 'dateModified': max(post['created_at'], post['updated_at']), 'inLanguage': 'en', 'mainEntityOfPage': {'@id': url + '#webpage'}, 'author': {'@type': 'Organization', '@id': BASE + '/#organization', 'name': 'QIXARC', 'url': BASE + '/about/'}, 'publisher': {'@id': BASE + '/#organization'}}
                 block += '<script id="cms-article-schema" type="application/ld+json">' + json.dumps(schema, ensure_ascii=False).replace('<', '\\u003c') + '</script>'
-        html = html.replace('</head>', '<!-- SEO -->\n' + block + '\n<!-- /SEO -->\n</head>')
         html = re.sub(r'/site-data.js\?v=[^" ]+', '/site-data.js?v=seo-4', html)
         if '/site-data.js' in html and '/published-routes.js' not in html:
             html = html.replace('<script src="/site-data.js', '<script src="/published-routes.js" defer></script>\n<script src="/site-data.js')
@@ -83,6 +82,7 @@ def apply(root):
         if 'href="/seo.css"' not in html: html = html.replace('</head>', '<link rel="stylesheet" href="/seo.css">\n</head>')
         if 'rel="preload"' not in html:
             html = html.replace('</head>', '<link rel="preload" href="/assets/fonts/display.woff2" as="font" type="font/woff2" crossorigin>\n</head>')
+        html = html.replace('</head>', '<!-- SEO -->\n' + block + '\n<!-- /SEO -->\n</head>')
         path.write_text(html, encoding='utf-8')
     entries = []
     for route in pages:
