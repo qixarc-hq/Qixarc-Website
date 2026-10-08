@@ -39,6 +39,8 @@ home = home.replace('Explore the Scaler Profile in our Products section', 'Explo
 home = re.sub(r'<!-- team-profiles -->.*?<!-- /team-profiles -->', '', home, flags=re.S)
 home = re.sub(r'(<section class="about wrap section" id="about">.*?)(</section>)', lambda m: m[1] + '<!-- team-profiles -->' + content['team_profiles']() + '<!-- /team-profiles -->' + m[2], home, flags=re.S)
 home = re.sub(r'/pages.css\?v=[^" ]+', '/pages.css?v=team-profiles-1', home)
+if '/speed-insights-init.js' not in home:
+    home = home.replace('</head>', '<script type="module" src="/speed-insights-init.js"></script></head>')
 (root / 'index.html').write_text(home, encoding='utf-8')
 
 def hero(index, label, title, text):
@@ -97,6 +99,8 @@ pages['story'] = content['story_page'](hero, cta)
 head = home.split('<body>')[0]
 if '/about-motion.js' not in head:
     head = head.replace('</head>', '<script src="/about-motion.js?v=product-logos-1" defer></script></head>')
+if '/speed-insights-init.js' not in head:
+    head = head.replace('</head>', '<script type="module" src="/speed-insights-init.js"></script></head>')
 header = re.search(r'<header.*?</header>', home, re.S).group()
 guide = re.search(r'<aside id="qbit-guide".*?</aside>', home, re.S).group()
 for slug, (title, description, content) in pages.items():

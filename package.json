@@ -1,0 +1,20 @@
+{
+  "name": "qixarc-website",
+  "version": "1.0.0",
+  "description": "QIXARC company website with Vercel Speed Insights",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "python3 scripts/export-published.py --fetch && python3 scripts/build-pages.py && python3 scripts/test-seo.py",
+    "serve": "python3 -m http.server 8000 --directory dist"
+  },
+  "keywords": [
+    "qixarc",
+    "website"
+  ],
+  "author": "QIXARC",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
