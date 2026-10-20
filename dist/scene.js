@@ -1,11 +1,12 @@
 import * as THREE from './assets/three.module.min.js';
+import { richMotionAllowed, watchMotionPreference } from './motion-policy.js';
 import logoShapes from './assets/logo-shapes.js?v=smooth-2';
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 let paused = reduced.matches || document.body.classList.contains('motion-paused');
 const scenes = [];
 const pointer = { x: 0, y: 0 };
-window.addEventListener('qixarc-motion', event => { paused = event.detail.paused; renderOnce(); });
+window.addEventListener('qixarc-motion', event => { paused = event.detail.paused; renderOnce(); sync(); });
 function studioEnvironment(renderer) {
   const room = new THREE.Scene();
   room.background = new THREE.Color('#778397');
@@ -23,7 +24,7 @@ function studioEnvironment(renderer) {
 }
 function createScene(canvas, small) {
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 1.75));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.25;
@@ -66,7 +67,7 @@ function createScene(canvas, small) {
     group.add(logo);
     // Restore the original brand artwork while filtering out its fine surface grain.
     // Keep the smoothed geometry and bounded rotation from the previous revision.
-    new THREE.TextureLoader().load('./assets/qixarc-logo.webp', texture => {
+    new THREE.TextureLoader().load('/assets/qixarc-logo.webp', texture => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.minFilter = THREE.LinearMipmapLinearFilter;
       texture.magFilter = THREE.LinearFilter;
@@ -112,7 +113,7 @@ function createScene(canvas, small) {
     renderer.render(scene, camera);
   };
   new ResizeObserver(resize).observe(canvas);
-  new IntersectionObserver(entries => { data.visible = entries[0].isIntersecting; if (data.visible) renderer.render(scene, camera); }, { rootMargin: '100px' }).observe(canvas);
+  new IntersectionObserver(entries => { data.visible = entries[0].isIntersecting; if (data.visible) renderer.render(scene, camera); sync(); }, { rootMargin: '100px' }).observe(canvas);
   canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); data.visible = false; canvas.style.display = 'none'; const fallback = canvas.parentElement.querySelector('[aria-hidden], .orbit-fallback'); if (fallback) fallback.style.display = ''; });
   resize();
   const fallback = canvas.parentElement.querySelector(small ? '.orbit-fallback' : '.sculpture-fallback');
@@ -128,11 +129,11 @@ sculpture.addEventListener('pointermove', event => {
 sculpture.addEventListener('pointerleave', () => { pointer.x = 0; pointer.y = 0; });
 function renderOnce() { for (const item of scenes) if (item.visible) item.renderer.render(item.scene, item.camera); }
 try { createScene(document.querySelector('#brand-canvas'), false); } catch (error) { document.querySelector('#motion-hint').textContent = 'CRAFTED WITH PASSION. REFINED IN PIXELS.'; console.warn('3D fallback active:', error.message); }
-try { createScene(document.querySelector('#hero-orbit'), true); } catch (error) { console.warn('Hero fallback active:', error.message); }
-let previous = 0;
+let previous = 0, frame = 0;
 function animate(time) {
-  requestAnimationFrame(animate);
-  if (document.hidden || paused) { previous = time; return; }
+  frame = 0;
+  if (!allowed()) return;
+  frame = requestAnimationFrame(animate);
   if (time - previous < 30) return;
   const delta = Math.min((time - previous) / 1000, 0.05);
   previous = time;
@@ -149,5 +150,13 @@ function animate(time) {
     item.renderer.render(item.scene, item.camera);
   });
 }
-requestAnimationFrame(animate);
+function allowed() { return !document.hidden && !paused && richMotionAllowed() && scenes.some(item => item.visible); }
+function sync() {
+  if (frame) cancelAnimationFrame(frame);
+  frame = 0;
+  if (allowed()) { previous = performance.now(); frame = requestAnimationFrame(animate); }
+}
+document.addEventListener('visibilitychange', sync);
+watchMotionPreference(sync);
+sync();
 

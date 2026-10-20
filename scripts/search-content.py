@@ -8,7 +8,7 @@ FAQ = [
     ('What is included in a website project?', 'The agreed scope defines the pages, design, development, integrations, content responsibilities and handover. Responsive layouts, core links and forms are reviewed together before launch. Hosting, domain access and ongoing support are agreed for each project.'),
     ('How much does a website cost and how long does it take?', 'Cost and timing depend on the number of pages, required features, integrations and content readiness. Send a project brief so QIXARC can discuss a scope-specific estimate; there is no single price or timeline that fits every build.'),
     ('Can QIXARC redesign an existing website?', 'Yes. Share your current website and what needs to improve, such as navigation, mobile usability, visual design or an enquiry flow. The redesign scope can then be based on those priorities.'),
-    ('Are QIXARC’s software products available now?', 'Product availability varies. Scaler Profile is in development and early access, Zevaris AI is coming soon, Serlow is in active development, and DecisionSphere is a prototype in development. Visit the Products page for each product’s current status.'),
+    ('Are QIXARC’s software products available now?', 'Product availability varies. Scaler Profile is in development and early access, Zevaris AI is coming soon, Serlow has an alpha in development, and Decision Sphere is coming soon: an agentic AI for mobile devices, with voice or text commands and user-controlled permissions. Visit the Products page for each product’s current status.'),
 ]
 
 def apply(root):

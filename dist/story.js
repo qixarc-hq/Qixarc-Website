@@ -14,6 +14,7 @@
     const progress = Math.max(0, Math.min(length, innerHeight * .52 - start));
     route.style.setProperty('--route-length', `${length}px`);
     route.style.setProperty('--route-progress', `${progress}px`);
+    route.style.setProperty('--route-ratio', String(length ? progress / length : 0));
     milestones.forEach(item => item.classList.toggle('is-reached', item.getBoundingClientRect().top + 10 <= start + progress + 1));
     route.classList.toggle('timeline-in-view', bounds.bottom > 0 && bounds.top < innerHeight);
   }

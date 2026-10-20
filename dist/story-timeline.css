@@ -6,9 +6,9 @@
 .timeline-route{position:relative;border-top:1px solid var(--line);margin-top:50px;padding-top:65px;--route-length:calc(100% - 65px);--route-progress:0px}
 .timeline-route ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:125px}
 .timeline-track{position:absolute;top:75px;left:27px;width:1px;height:var(--route-length);background:#bdc9e5;overflow:hidden}
-.timeline-fill{display:block;width:100%;height:var(--route-progress);background:linear-gradient(#28c9ff,#354eff)}
+.timeline-fill{display:block;width:100%;height:100%;transform:scaleY(var(--route-ratio,0));transform-origin:top;background:linear-gradient(#28c9ff,#354eff)}
 .story-milestone{position:relative;display:grid;grid-template-columns:minmax(110px,1fr) minmax(0,2.5fr);gap:38px;padding-left:100px}
-.milestone-dot{position:absolute;left:20px;top:3px;width:15px;height:15px;border:1px solid #8495c0;border-radius:50%;background:#eef1fd;transition:background .4s,box-shadow .4s}
+.milestone-dot{position:absolute;left:20px;top:3px;width:15px;height:15px;border:1px solid #8495c0;border-radius:50%;background:#eef1fd;transition:transform .25s ease,opacity .25s ease}
 .milestone-dot:after{content:'';position:absolute;inset:4px;border-radius:50%;background:#96a7ce}
 .story-milestone.is-reached .milestone-dot{border-color:#354eff;box-shadow:0 0 0 5px #354eff12}
 .story-milestone.is-reached .milestone-dot:after{background:#354eff}

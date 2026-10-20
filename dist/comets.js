@@ -28,7 +28,7 @@
     particle.element.style.width = `${random(90, 260)}px`;
     particle.element.style.height = `${random(.8, 1.7)}px`;
   };
-  const allowed = () => visible && !document.hidden && !reduced.matches && !document.body.classList.contains('motion-paused');
+  const allowed = () => visible && !mobile.matches && !document.hidden && !reduced.matches && !document.body.classList.contains('motion-paused');
   const tick = now => {
     frame = 0;
     if (!allowed()) return;
@@ -57,7 +57,7 @@
   const sync = () => {
     if (frame) cancelAnimationFrame(frame);
     frame = 0;
-    field.hidden = reduced.matches;
+    field.hidden = reduced.matches || mobile.matches;
     if (allowed()) { previous = performance.now(); frame = requestAnimationFrame(tick); }
   };
   rebuild();

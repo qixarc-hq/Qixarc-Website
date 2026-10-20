@@ -8,7 +8,7 @@ BASE = 'https://www.qixarc.com'
 PAGES = {
     '': ('QIXARC | Web Design, Development & Digital Products', 'QIXARC builds business websites, e-commerce experiences and digital products. Based in India and welcoming international clients. Discuss your project.'),
     'story': ('Our Story & QBit | QIXARC', 'Meet QBit, QIXARC’s digital companion, and follow our journey from early ideas to software, AI and automation products.'),
-    'products': ('Digital Products: Scaler Profile, Serlow & AI | QIXARC', 'Explore Scaler Profile, Zevaris AI, Serlow and DecisionSphere: QIXARC products for messaging, intelligent assistance, teamwork and decisions.'),
+    'products': ('Digital Products: Scaler Profile, Serlow & AI | QIXARC', 'Explore Scaler Profile, Zevaris AI, Serlow and Decision Sphere: QIXARC products for messaging, intelligent assistance, teamwork and mobile assistance.'),
     'services': ('Web Design, Development & UI/UX Services | QIXARC', 'Plan your business website, online store or custom digital system with QIXARC. Explore our services and how we work with international clients.'),
     'about': ('About Our Team | QIXARC, Madurai', 'Meet QIXARC in Madurai and our leadership: Kabibalan, Founder; Sri, Co-founder; and Giri, Managing Director. Explore their portfolios.'),
     'research': ('Research & Development | QIXARC', 'Explore QIXARC’s research into human-guided AI, interfaces in motion and connected workflows, with updates from our R&D desk.'),
@@ -83,10 +83,18 @@ def apply(root):
         if 'rel="preload"' not in html:
             html = html.replace('</head>', '<link rel="preload" href="/assets/fonts/display.woff2" as="font" type="font/woff2" crossorigin>\n</head>')
         html = html.replace('</head>', '<!-- SEO -->\n' + block + '\n<!-- /SEO -->\n</head>')
+        if 'href="/assets/fonts/sans.woff2" as="font"' not in html:
+            html = html.replace('</head>', '<link rel="preload" href="/assets/fonts/sans.woff2" as="font" type="font/woff2" crossorigin>\n</head>')
         html = re.sub(r'<link rel="stylesheet" href="/mobile.css[^"\n]*">\s*', '', html)
-        html = html.replace('</head>', '<link rel="stylesheet" href="/mobile.css?v=mobile-1">\n</head>')
-        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=mobile-1', html)
-        html = re.sub(r'/guide.js\?v=[^" ]+', '/guide.js?v=mobile-1', html)
+        html = html.replace('</head>', '<link rel="stylesheet" href="/mobile.css?v=responsive-2">\n</head>')
+        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=responsive-2', html)
+        html = re.sub(r'/guide.js\?v=[^" ]+', '/guide.js?v=responsive-2', html)
+        # Optimized copies retain the supplied artwork; originals stay available.
+        for asset in ['serlow-logo.png', 'zevaris-ai-logo.png', 'decision-sphere-logo.png', 'scaler-profile.webp', 'qixarc-logo.webp', 'logo-nav.webp', 'web.webp']:
+            html = html.replace('/assets/' + asset + '"', '/assets/' + Path(asset).stem + '-opt.webp"')
+        html = html.replace('<img src="/assets/qixarc-logo-opt.webp" alt="" width="620" height="625">', '<img src="/assets/qixarc-logo-opt.webp" alt="" width="620" height="625" loading="lazy" decoding="async">')
+        for asset in ['style.css', 'pages.css', 'navigation.js', 'comets.js', 'story.js', 'story-timeline.css']:
+            html = re.sub(r'/' + re.escape(asset) + r'(?:\?v=[^\" ]+)?(?=\")', '/' + asset + '?v=responsive-2', html)
         path.write_text(html, encoding='utf-8')
     entries = []
     for route in pages:
@@ -96,7 +104,7 @@ def apply(root):
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(entries) + '</urlset>\n'
     (root / 'sitemap.xml').write_text(sitemap, encoding='utf-8')
     (root / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n', encoding='utf-8')
-    (root / 'llms.txt').write_text('# QIXARC\n\n> Web design, development and digital products. Based in Madurai, India; international project enquiries welcome.\n\n## Official pages\n' + ''.join(f'- [{title.split(" | ")[0]}]({BASE}{"/"+route+"/" if route else "/"}): {description}\n' for route, (title, description) in pages.items()) + '\n## Contact\n- Email: qixarc@gmail.com\n- Phone: +91 83007 15081\n\n## Product status\nScaler Profile: development / early access. Zevaris AI: coming soon. Serlow: active development. DecisionSphere: prototype / in development.\n\nThis is an optional navigation summary. The linked HTML pages are the authoritative source.\n', encoding='utf-8')
+    (root / 'llms.txt').write_text('# QIXARC\n\n> Web design, development and digital products. Based in Madurai, India; international project enquiries welcome.\n\n## Official pages\n' + ''.join(f'- [{title.split(" | ")[0]}]({BASE}{"/"+route+"/" if route else "/"}): {description}\n' for route, (title, description) in pages.items()) + '\n## Contact\n- Email: qixarc@gmail.com\n- Phone: +91 83007 15081\n\n## Product status\nScaler Profile: development / early access. Zevaris AI: coming soon. Serlow: alpha / in development, https://serlow-alpha.vercel.app/. Decision Sphere: coming soon; an agentic mobile AI in development, with voice or text commands and user-controlled access to mobile data and apps.\n\nThis is an optional navigation summary. The linked HTML pages are the authoritative source.\n', encoding='utf-8')
 
 if __name__ == '__main__':
     apply(Path(__file__).resolve().parents[1] / 'dist')

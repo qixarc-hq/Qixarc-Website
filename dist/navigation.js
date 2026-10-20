@@ -16,7 +16,7 @@
     curtain.querySelector('small').textContent = `/${String(routes.indexOf(name) + 1).padStart(2, '0')}`;
     curtain.querySelector('strong').textContent = name === 'research' ? 'R&D' : name;
   };
-  const options = { duration: 800, easing: 'cubic-bezier(.76,0,.24,1)', fill: 'forwards' };
+  const options = { duration: 220, easing: 'cubic-bezier(.76,0,.24,1)', fill: 'forwards' };
   let busy = false;
   const reset = () => {
     busy = false;
@@ -42,14 +42,14 @@
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target || link.hasAttribute('download')) return;
     const target = new URL(link.href, location.href);
     if (target.origin !== location.origin || pathKey(target.pathname) === pathKey(location.pathname) || !routes.includes(pathKey(target.pathname).slice(1) || 'home')) return;
-    if (reduced.matches || document.body.classList.contains('motion-paused')) return;
+    if (reduced.matches || matchMedia('(max-width: 1100px), (pointer: coarse)').matches || document.body.classList.contains('motion-paused')) return;
     event.preventDefault();
     if (busy) return;
     busy = true;
     label(target.pathname);
     curtain.classList.add('is-active');
-    curtain.querySelector('strong').animate([{ transform: 'translateY(108%)' }, { transform: 'translateY(0)' }], { duration: 720, delay: 80, easing: 'cubic-bezier(.16,1,.3,1)' });
-    curtain.querySelector('i').animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 650, delay: 150, easing: 'cubic-bezier(.16,1,.3,1)' });
+    curtain.querySelector('strong').animate([{ transform: 'translateY(108%)' }, { transform: 'translateY(0)' }], { duration: 180, delay: 0, easing: 'cubic-bezier(.16,1,.3,1)' });
+    curtain.querySelector('i').animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 160, delay: 0, easing: 'cubic-bezier(.16,1,.3,1)' });
     curtain.animate([{ transform: 'translateY(100%)' }, { transform: 'translateY(0)' }], options).finished.then(() => {
       try { sessionStorage.setItem('qixarc-transition', JSON.stringify({ path: target.pathname, time: Date.now() })); } catch {}
       location.assign(target.href);

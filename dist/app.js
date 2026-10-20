@@ -32,20 +32,21 @@
       menu.focus();
     }
   });
-  window.matchMedia('(min-width: 1001px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+  window.matchMedia('(min-width: 1101px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
   const syncFormFocus = () => {
     const field = document.activeElement;
     document.body.classList.toggle('mobile-form-focus', Boolean(field?.matches('input:not([type=radio]):not([type=checkbox]), textarea, select')));
   };
   document.addEventListener('focusin', syncFormFocus);
   document.addEventListener('focusout', () => requestAnimationFrame(syncFormFocus));
+  document.addEventListener('visibilitychange', () => document.body.classList.toggle('page-hidden', document.hidden));
   const entranceAnimations = new Set();
   const finishEntrances = () => {
     entranceAnimations.forEach(animation => animation.finish());
     document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
     document.querySelectorAll('.motion-text').forEach(element => element.classList.add('text-visible'));
   };
-  // Reference-inspired character reveals. Preserve words, line breaks and accessible names.
+  // Reveal words without creating a separate DOM node for every character. Preserve words, line breaks and accessible names.
   if (!reducedMotion.matches && 'IntersectionObserver' in window) {
     const textObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -54,7 +55,7 @@
         textObserver.unobserve(entry.target);
       });
     }, { threshold: 0.12 });
-    document.querySelectorAll('.hero h1, main h2, .project h3, .concept-copy h3').forEach(heading => {
+    document.querySelectorAll('main h2, .project h3, .concept-copy h3').forEach(heading => {
       // Service headings are replaced when a visitor selects a tab.
       if (heading.id === 'service-title') return;
       const label = heading.cloneNode(true);
@@ -75,13 +76,9 @@
           if (!word.trim()) { run.append(document.createTextNode(word)); return; }
           const wrapper = document.createElement('span');
           wrapper.className = 'motion-word';
-          Array.from(word).forEach(character => {
-            const letter = document.createElement('span');
-            letter.className = 'motion-char';
-            letter.textContent = character;
-            letter.style.setProperty('--letter-delay', `${Math.min(index++ * 22, 480)}ms`);
-            wrapper.append(letter);
-          });
+          wrapper.classList.add('motion-char');
+          wrapper.textContent = word;
+          wrapper.style.setProperty('--letter-delay', `${Math.min(index++ * 35, 140)}ms`);
           run.append(wrapper);
         });
         node.replaceWith(run);
@@ -94,17 +91,16 @@
   // Animate individual hero lines without changing the layout or hiding content if JS fails.
   if (!reducedMotion.matches && 'animate' in Element.prototype) {
     const entranceSteps = [
-      ['.nav', 70, -14],
-      ['.hero-eyebrow', 150, 18],
-      ['.hero-bottom', 480, 22],
-      ['.showcase', 580, 28]
+      ['.hero-eyebrow', 0, 8],
+      ['.hero-bottom', 60, 10],
+      ['.showcase', 100, 12]
     ];
     entranceSteps.forEach(([selector, delay, distance]) => {
       document.querySelectorAll(selector).forEach(element => {
         const animation = element.animate([
           { opacity: 0, transform: `translateY(${distance}px)` },
           { opacity: 1, transform: 'translateY(0)' }
-        ], { duration: 850, delay, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
+        ], { duration: 360, delay, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
         entranceAnimations.add(animation);
         animation.onfinish = () => entranceAnimations.delete(animation);
       });
@@ -150,7 +146,7 @@
   });
   const mobileMotion = window.matchMedia('(max-width: 760px)');
   function updateParallax() {
-    const disabled = reducedMotion.matches || document.body.classList.contains('motion-paused');
+    const disabled = reducedMotion.matches || mobileMotion.matches || !matchMedia('(hover: hover) and (pointer: fine)').matches || document.body.classList.contains('motion-paused');
     const viewport = window.innerHeight;
     const positions = new Map();
     parallaxItems.forEach(({ element, anchor, speed }) => {
@@ -174,9 +170,8 @@
   const progress = document.querySelector('.scroll-progress');
   const updateProgress = () => {
     const total = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.width = `${total > 0 ? window.scrollY / total * 100 : 0}%`;
+    progress.style.transform = `scaleX(${total > 0 ? Math.max(0, Math.min(1, window.scrollY / total)) : 0})`;
     updateParallax();
-    updateNavigation();
     scrollPending = false;
   };
   const scheduleScrollUpdate = () => {
@@ -186,6 +181,7 @@
   window.addEventListener('resize', scheduleScrollUpdate);
   window.addEventListener('load', scheduleScrollUpdate);
   window.addEventListener('qixarc-motion', scheduleScrollUpdate);
+  updateNavigation();
   updateProgress();
   const services = {
     design: { title: 'Thoughtful by design.', description: 'Intuitive interfaces and memorable digital experiences. We pair a clear visual identity with user journeys that make every interaction feel natural.', tags: ['Interface design', 'User experience', 'Prototyping'], glyph: 'Aa', color: 'linear-gradient(125deg,#008bea,#2445f5,#843cff)', label: 'CLARITY MEETS CHARACTER' },

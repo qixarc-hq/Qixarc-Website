@@ -5,7 +5,7 @@
 ## Official pages
 - [QIXARC](https://www.qixarc.com/): QIXARC builds business websites, e-commerce experiences and digital products. Based in India and welcoming international clients. Discuss your project.
 - [Our Story & QBit](https://www.qixarc.com/story/): Meet QBit, QIXARC’s digital companion, and follow our journey from early ideas to software, AI and automation products.
-- [Digital Products: Scaler Profile, Serlow & AI](https://www.qixarc.com/products/): Explore Scaler Profile, Zevaris AI, Serlow and DecisionSphere: QIXARC products for messaging, intelligent assistance, teamwork and decisions.
+- [Digital Products: Scaler Profile, Serlow & AI](https://www.qixarc.com/products/): Explore Scaler Profile, Zevaris AI, Serlow and Decision Sphere: QIXARC products for messaging, intelligent assistance, teamwork and mobile assistance.
 - [Web Design, Development & UI/UX Services](https://www.qixarc.com/services/): Plan your business website, online store or custom digital system with QIXARC. Explore our services and how we work with international clients.
 - [About Our Team](https://www.qixarc.com/about/): Meet QIXARC in Madurai and our leadership: Kabibalan, Founder; Sri, Co-founder; and Giri, Managing Director. Explore their portfolios.
 - [Research & Development](https://www.qixarc.com/research/): Explore QIXARC’s research into human-guided AI, interfaces in motion and connected workflows, with updates from our R&D desk.
@@ -18,6 +18,6 @@
 - Phone: +91 83007 15081
 
 ## Product status
-Scaler Profile: development / early access. Zevaris AI: coming soon. Serlow: active development. DecisionSphere: prototype / in development.
+Scaler Profile: development / early access. Zevaris AI: coming soon. Serlow: alpha / in development, https://serlow-alpha.vercel.app/. Decision Sphere: coming soon; an agentic mobile AI in development, with voice or text commands and user-controlled access to mobile data and apps.
 
 This is an optional navigation summary. The linked HTML pages are the authoritative source.

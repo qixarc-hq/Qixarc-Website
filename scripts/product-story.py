@@ -1,4 +1,4 @@
-"""Product and story content, based on Kabibalan's public portfolio (2026-10-04)."""
+"""QIXARC product and story content; product updates supplied by the company."""
 
 products = [
     ('scaler-profile', 'Scaler Profile', 'In development / early access', 'Messaging automation',
@@ -9,14 +9,14 @@ products = [
      'An AI platform in development for businesses and individuals, bringing everyday automation, timely insights and intelligent assistance into one place.',
      ['AI assistance for practical tasks', 'Automation for routine work', 'Real-time analytics and recommendations'],
      'The brand and coming-soon presence are live. Work is underway on the AI, automation and analytics foundations.', 'zevaris.html'),
-    ('serlow', 'Serlow', 'In active development', 'Collaborative workspace',
+    ('serlow', 'Serlow', 'Alpha / in development', 'Collaborative workspace',
      'A connected workspace designed to bring AI-assisted notes, visual documentation, tasks and code activity together for distributed teams.',
      ['Smart notes and visual documents', 'Project management with GitHub integration', 'An interactive virtual-office concept'],
-     'The workspace architecture and editor experience are defined. Smart notes, project tools and GitHub integration are in development; the virtual-office beta comes next.', 'serlow.html'),
-    ('decision-sphere', 'DecisionSphere', 'Prototype / in development', 'Decision intelligence',
-     'Built around Strategic Analysis AI, DecisionSphere helps people explore a decision’s objectives, constraints, risks and possible consequences before choosing a direction.',
-     ['Structured reasoning and ripple-effect simulation', 'Probabilistic outcomes and risk analysis', 'Recommendations with implementation plans'],
-     'The decision model and dashboard direction are defined. Reasoning and simulation flows are prototyped, with an interactive beta planned. People remain the decision-makers.', 'decisionsphere.html')
+     'Explore the Serlow alpha while the workspace continues to develop. Features and availability may change during this early stage.', 'serlow.html'),
+    ('decision-sphere', 'Decision Sphere', 'Coming Soon', 'Agentic AI for mobile',
+     'An agentic AI for mobile devices, being built to help you control your phone through voice commands or text input.',
+     ['Execute phone tasks from spoken or typed instructions', 'Summarize messages and streamline everyday workflows', 'Explore options and get support with everyday decisions'],
+     'Currently in development. These are planned capabilities; Decision Sphere is not yet available to use.', 'decisionsphere.html')
 ]
 
 def product_mark(slug, title):
@@ -29,13 +29,19 @@ def product_mark(slug, title):
 def product_page(hero, cta):
     sections = []
     for index, (slug, title, status, category, description, features, progress, source) in enumerate(products, 1):
+        privacy = '<p class="product-privacy"><strong>Your phone. Your permissions.</strong> Decision Sphere is being designed around transparent, permission-based access. You choose exactly which mobile data and applications it can access.</p>' if slug == 'decision-sphere' else ''
+        action = '<a class="text-link" href="/contact/">Ask about this product ↗</a>'
+        if slug == 'scaler-profile':
+            action = '<a class="button dark" href="https://scalerprofile.vercel.app/" target="_blank" rel="noopener noreferrer">Explore early access ↗</a>'
+        elif slug == 'serlow':
+            action = '<a class="button dark" href="https://serlow-alpha.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Explore Serlow alpha (opens in a new tab)">Explore Serlow alpha ↗</a>'
         sections.append(f'''<article class="catalogue-product wrap" id="{slug}">
         <div class="catalogue-art art-{slug}">{product_mark(slug, title)}<span class="catalogue-number">0{index} / QIXARC</span></div>
         <div class="catalogue-copy"><span class="status-chip">{status}</span><h2>{title}</h2><span class="section-label">{category}</span><p>{description}</p>
-        <ul>{''.join(f'<li>{feature}</li>' for feature in features)}</ul><p class="product-progress">{progress}</p>
+        <ul>{''.join(f'<li>{feature}</li>' for feature in features)}</ul>{privacy}<p class="product-progress">{progress}</p>
         <div class="product-actions"><a class="text-link" href="https://kabibalansportfolio.vercel.app/{source}" target="_blank" rel="noopener">Read the product case study ↗</a>
-        {('<a class="button dark" href="https://scalerprofile.vercel.app/" target="_blank" rel="noopener">Explore early access ↗</a>' if slug == 'scaler-profile' else '<a class="text-link" href="/contact/">Ask about this product ↗</a>')}</div></div></article>''')
-    return ('Products', 'Explore QIXARC’s Scaler Profile, Zevaris AI, Serlow and DecisionSphere, with current development stages and product capabilities.',
+        {action}</div></div></article>''')
+    return ('Products', 'Explore QIXARC’s Scaler Profile, Zevaris AI, Serlow and Decision Sphere, with current development stages and product capabilities.',
         hero('03', 'THE PRODUCT LINEUP', 'Four products.<br>One builder’s mindset.', 'Messaging, intelligent assistance, collaboration and decisions. Explore what each QIXARC product is being built to do.') +
         '<nav class="wrap catalogue-index" aria-label="Product index">'+''.join(f'<a href="#{p[0]}">{p[1]} ↘</a>' for p in products)+'</nav>' + ''.join(sections) +
         cta('Curious about what comes next?', 'Tell us which product you are interested in and how you would use it.', '/contact/', 'Talk to QIXARC'))
@@ -61,7 +67,7 @@ chapters = [
     ('2024', 'Curiosity becomes practice.', 'Hi, I’m QBit. Our story starts with Kabibalan S, a B.Tech Information Technology student in Tamil Nadu. His approach is simple: learn by building software around real problems.', 'The first foundation', 'Kabibalan began his B.Tech in Information Technology at Hindusthan Institute of Technology in 2024. His work spans software development, AI, SaaS and automation.'),
     ('2025', 'An idea gets a name.', 'In 2025, Kabibalan founded QIXARC. It gave his work a shared home: a technology startup for software, AI-powered applications and automation.', 'From builder to founder', 'QIXARC brings product development, architecture and business strategy together. The focus is practical software that turns ideas into useful digital experiences.'),
     ('2025', 'Real problems guide the work.', 'Next came AI applications and business automation. The goal wasn’t to add technology for its own sake. It was to reduce repetitive work and make room for the decisions people need to make.', 'Learning through building', 'Hands-on development and GitHub contributions became part of the learning process. Software, interfaces and workflows grew together through practical work.'),
-    ('2026', 'A family of products.', 'Now the story has four product directions: Scaler Profile for conversations, Serlow for teamwork, DecisionSphere for structured decisions, and Zevaris AI for intelligent assistance. They are at different stages of development.', 'One vision, distinct problems', 'Scaler Profile and Serlow are in development. DecisionSphere’s reasoning and simulation flows are prototyped. Zevaris AI is coming soon, with its core platform being built.'),
+    ('2026', 'A family of products.', 'Now the story has four product directions: Scaler Profile for conversations, Serlow for teamwork, Decision Sphere for voice- and text-controlled mobile assistance, and Zevaris AI for intelligent assistance. They are at different stages of development.', 'One vision, distinct problems', 'Scaler Profile and Serlow are in development. Decision Sphere is coming soon: a mobile agentic AI being designed around permissions you control. Zevaris AI is coming soon, with its core platform being built.'),
     ('NEXT', 'The next chapter is open.', 'And where do we go from here? The ambition is to grow QIXARC into a technology company with products that reach people around the world. I’ll be here to help you explore what we build next.', 'An ambition, not a finish line', 'The roadmap looks toward Kabibalan’s expected graduation in 2028 and continued product development. The next chapter is about turning prototypes and early builds into experiences people can use.')
 ]
 
