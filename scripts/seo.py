@@ -83,6 +83,10 @@ def apply(root):
         if 'rel="preload"' not in html:
             html = html.replace('</head>', '<link rel="preload" href="/assets/fonts/display.woff2" as="font" type="font/woff2" crossorigin>\n</head>')
         html = html.replace('</head>', '<!-- SEO -->\n' + block + '\n<!-- /SEO -->\n</head>')
+        html = re.sub(r'<link rel="stylesheet" href="/mobile.css[^"\n]*">\s*', '', html)
+        html = html.replace('</head>', '<link rel="stylesheet" href="/mobile.css?v=mobile-1">\n</head>')
+        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=mobile-1', html)
+        html = re.sub(r'/guide.js\?v=[^" ]+', '/guide.js?v=mobile-1', html)
         path.write_text(html, encoding='utf-8')
     entries = []
     for route in pages:

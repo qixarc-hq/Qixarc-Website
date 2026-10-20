@@ -126,3 +126,11 @@ py -m http.server 8000 --directory dist
 ```
 
 Visit http://localhost:8000 and press Ctrl+F5 to reload the new palette. If `py` is unavailable, use `python` instead. The JavaScript modules require an HTTP server rather than opening index.html directly.
+
+## Mobile layout update (20 October 2026)
+
+`dist/mobile.css` loads last on every page, including Admin. It provides a
+scrollable tablet/phone menu, fluid headings for small phones, larger input and
+touch targets, a contained 3D showcase, and a compact QBit panel that hides while
+visitors type. `scripts/seo.py` includes these styles and current interaction
+versions when regenerating pages. The existing desktop layout is preserved.

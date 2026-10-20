@@ -1,0 +1,23 @@
+# QIXARC
+
+> Web design, development and digital products. Based in Madurai, India; international project enquiries welcome.
+
+## Official pages
+- [QIXARC](https://www.qixarc.com/): QIXARC builds business websites, e-commerce experiences and digital products. Based in India and welcoming international clients. Discuss your project.
+- [Our Story & QBit](https://www.qixarc.com/story/): Meet QBit, QIXARC’s digital companion, and follow our journey from early ideas to software, AI and automation products.
+- [Digital Products: Scaler Profile, Serlow & AI](https://www.qixarc.com/products/): Explore Scaler Profile, Zevaris AI, Serlow and DecisionSphere: QIXARC products for messaging, intelligent assistance, teamwork and decisions.
+- [Web Design, Development & UI/UX Services](https://www.qixarc.com/services/): Plan your business website, online store or custom digital system with QIXARC. Explore our services and how we work with international clients.
+- [About Our Team](https://www.qixarc.com/about/): Meet QIXARC in Madurai and our leadership: Kabibalan, Founder; Sri, Co-founder; and Giri, Managing Director. Explore their portfolios.
+- [Research & Development](https://www.qixarc.com/research/): Explore QIXARC’s research into human-guided AI, interfaces in motion and connected workflows, with updates from our R&D desk.
+- [Design & Technology Blog](https://www.qixarc.com/blog/): Read QIXARC’s design and technology journal: ideas about useful interfaces, purposeful animation and digital product development.
+- [Contact QIXARC](https://www.qixarc.com/contact/): Contact QIXARC in Madurai about websites, UI/UX design and digital products. Send a project enquiry or email qixarc@gmail.com.
+- [Motion should have a purpose](https://www.qixarc.com/blog/motion-with-purpose/): A QIXARC design note on page transitions, feedback and making room for people who prefer less movement.
+
+## Contact
+- Email: qixarc@gmail.com
+- Phone: +91 83007 15081
+
+## Product status
+Scaler Profile: development / early access. Zevaris AI: coming soon. Serlow: active development. DecisionSphere: prototype / in development.
+
+This is an optional navigation summary. The linked HTML pages are the authoritative source.

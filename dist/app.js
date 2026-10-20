@@ -32,7 +32,13 @@
       menu.focus();
     }
   });
-  window.matchMedia('(min-width: 761px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+  window.matchMedia('(min-width: 1001px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+  const syncFormFocus = () => {
+    const field = document.activeElement;
+    document.body.classList.toggle('mobile-form-focus', Boolean(field?.matches('input:not([type=radio]):not([type=checkbox]), textarea, select')));
+  };
+  document.addEventListener('focusin', syncFormFocus);
+  document.addEventListener('focusout', () => requestAnimationFrame(syncFormFocus));
   const entranceAnimations = new Set();
   const finishEntrances = () => {
     entranceAnimations.forEach(animation => animation.finish());

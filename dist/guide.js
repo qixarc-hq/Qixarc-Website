@@ -52,7 +52,7 @@ document.querySelectorAll('#qbit-panel a').forEach(link => link.addEventListener
   event.preventDefault();
   const index = stops.findIndex(stop => stop[0] === id);
   if (index !== -1) showStop(index);
-  if (matchMedia('(max-width: 760px)').matches) setOpen(false);
+  if (matchMedia('(max-width: 1000px)').matches) setOpen(false);
   const heading = target.querySelector('h1, h2') || target;
   heading.setAttribute('tabindex', '-1');
   heading.focus({ preventScroll: true });

@@ -1,0 +1,118 @@
+/* Shared phone and tablet refinements; loaded after page-specific styles. */
+@media (max-width:1000px){
+  .nav.wrap{padding:12px 16px;gap:12px;min-height:72px}
+  .nav .wordmark{margin-right:auto;gap:7px}
+  .nav .wordmark .nav-logo{width:36px;height:36px}
+  .nav .wordmark .brand-name{font-size:19px}
+  .nav .nav-contact{min-height:44px;padding:10px 16px;font-size:12px;white-space:nowrap}
+  .nav .menu-toggle{display:flex;flex-shrink:0;width:44px;height:44px;padding:11px;align-items:center;justify-content:center;flex-direction:column;gap:6px;border:1px solid #bcc7ed66;border-radius:50%;background:#ffffff80;z-index:22}
+  .menu-toggle span{display:block;width:20px;height:1.5px;background:#172554}
+  .nav .nav-links{display:none;position:absolute;inset:auto 12px auto;top:calc(100% + 8px);width:auto;max-height:calc(100svh - var(--nav-height) - 24px);max-height:calc(100dvh - var(--nav-height) - 24px);padding:12px;flex-direction:column;align-items:stretch;gap:4px;overflow-y:auto;overscroll-behavior:contain;border:1px solid #ffffffd9;border-radius:20px;background:#f0f3fff5;box-shadow:0 16px 36px #24346b21;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+  .nav .nav-links.open{display:flex}
+  .nav .nav-links a{display:flex;align-items:center;flex-shrink:0;min-height:48px;padding:12px 16px;width:100%;font-size:16px;border-radius:12px}
+  .nav .nav-links a[aria-current]{background:#e2e9ff;color:#2445d9;box-shadow:inset 3px 0 0 #4264f5}
+  .qbit-guide{right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));gap:4px}
+  .qbit-caption{display:none}
+  .qbit-launcher{min-height:64px;width:64px;border-radius:50%;background:#f5f7ffb3;box-shadow:0 4px 18px #182b6020}
+  .qbit-launcher canvas{width:64px;height:64px}
+  .qbit-fallback{width:46px;height:40px;border-width:5px;border-radius:16px;margin:9px;gap:8px}
+  .qbit-fallback i{height:9px;width:5px}
+  .qbit-panel{width:min(330px,calc(100vw - 24px));max-height:calc(100svh - 112px);max-height:calc(100dvh - 112px);overflow-y:auto;overscroll-behavior:contain;padding:20px}
+  .qbit-panel-top button{width:44px;height:44px;flex-shrink:0}
+  .qbit-shortcuts a,.qbit-panel-bottom button{display:inline-flex;align-items:center;min-height:44px;padding:10px 12px}
+  .qbit-panel-bottom{gap:12px;flex-wrap:wrap}
+  .mobile-form-focus .qbit-guide{visibility:hidden;pointer-events:none}
+  form input:not([type=radio]):not([type=checkbox]),form textarea,form select,.admin-page input,.admin-page textarea,.admin-page select{font-size:16px;line-height:1.5}
+  .button{min-height:48px}
+  .footer-top>div>a,.footer-bottom a{display:inline-flex;align-items:center;min-height:44px}
+  .footer-top>div{gap:0}
+}
+@media (max-width:760px){
+  .wrap{width:calc(100% - 40px)}
+  .nav.wrap{padding:10px 12px;gap:8px}
+  .hero{padding-top:40px;padding-bottom:44px;min-height:0}
+  .hero-eyebrow{font-size:14px;line-height:1.5;gap:8px;margin-bottom:28px;text-align:center}
+  .hero-eyebrow .mini-symbol{font-size:23px;flex-shrink:0}
+  .hero h1{font-size:clamp(44px,13.5vw,70px);line-height:1.02}
+  .hero-bottom{margin-top:26px;padding-bottom:0;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+  .hero-location{font-size:11px;line-height:1.75;order:2;margin:0}
+  .hero-bottom>div{width:100%}
+  .hero-bottom p{font-size:16px;line-height:1.7;margin:0 auto 24px;max-width:34ch}
+  .hero-bottom p br{display:none}
+  .hero-bottom>div>.button{position:static;translate:none;transform:none;margin:0 auto;min-height:52px;font-size:15px;padding:15px 23px;white-space:normal}
+  .hero-bottom>div>.button:hover{transform:none}
+  .showcase{min-height:610px}
+  .showcase-copy{padding:20px 20px 0}
+  .showcase h2{font-size:clamp(46px,15vw,68px)}
+  .showcase-label{padding:22px 20px;gap:14px;font-size:9px;letter-spacing:.06em}
+  .showcase-foot{left:20px;right:20px;gap:10px;bottom:20px}
+  .showcase-foot button{min-height:44px;font-size:11px;gap:8px;padding:10px 12px}
+  .showcase .sculpture{inset:250px 0 58px;width:100%;transform:none!important}
+  #brand-canvas{width:100%;max-width:100%;left:0;right:0}
+  .detail-hero{padding-top:36px;padding-bottom:36px}
+  .detail-hero h1{font-size:clamp(44px,12.5vw,86px);line-height:1.02;margin:24px 0}
+  .detail-lead{font-size:17px;line-height:1.75}
+  .detail-hero .section-label{font-size:10px;line-height:1.8;letter-spacing:.08em}
+  .detail-hero h1 .motion-word{max-width:100%}
+  .motion-char{filter:none!important}
+  .home-product-info{padding:22px}
+  .home-product-info h3{font-size:clamp(28px,8.5vw,36px);gap:8px;overflow-wrap:anywhere}
+  .home-product-info h3 span{flex-shrink:0}
+  .home-product-art{height:clamp(190px,62vw,270px);padding:20px}
+  .home-product-info p,.team-profile p{font-size:15px;line-height:1.65}
+  .section-label,.status-chip{line-height:1.8;overflow-wrap:anywhere}
+  .catalogue-index{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-top:24px;padding-bottom:10px}
+  .catalogue-index a{display:flex;align-items:center;min-height:48px;padding:10px 12px;font-size:13px}
+  .catalogue-art{min-height:250px;padding:28px 22px 48px}
+  .catalogue-art img{max-height:260px}
+  .catalogue-number{bottom:17px;left:22px}
+  .catalogue-copy h2{font-size:clamp(36px,11vw,54px)}
+  .product-actions .text-link{line-height:1.6;white-space:normal}
+  .story-experience{padding-top:30px}
+  .story-host{padding:22px 18px}
+  .qbit-narration{font-size:17px;line-height:1.8}
+  .story-context p{font-size:15px}
+  .timeline-caption{align-items:start;flex-wrap:wrap;gap:8px}
+  .story-timeline>h2{font-size:clamp(40px,12vw,64px)}
+  .milestone-copy h3{font-size:clamp(28px,8vw,36px)}
+  .milestone-copy p{font-size:15px;line-height:1.8}
+  .research-banner{padding:26px;gap:30px}
+  .research-banner h2{font-size:clamp(42px,12vw,64px)}
+  .research-diagram{min-width:0}
+  .cms-card{padding:24px}
+  .cms-card h2{font-size:clamp(30px,8vw,42px);overflow-wrap:anywhere}
+  .cms-content>article>h1,.cms-content>h1{font-size:clamp(40px,11vw,64px);overflow-wrap:anywhere}
+  .cms-article-body{font-size:16px;line-height:1.85}
+  .contact-detail{gap:32px}
+  .contact-detail form{padding:22px 18px}
+  .contact-detail .contact-email,.contact-email{font-size:clamp(20px,6vw,26px);overflow-wrap:anywhere}
+  .contact h2{font-size:clamp(60px,18vw,80px)}
+  .interest-options span{display:flex;align-items:center;min-height:44px;font-size:13px;padding:10px 15px}
+  .interest-options{gap:10px}
+  form label,form legend{font-size:14px;line-height:1.6}
+  form .form-help{font-size:13px;line-height:1.65;max-width:none}
+  #project-form>button[type=submit]{max-width:100%;white-space:normal;line-height:1.5}
+  form textarea{min-height:140px}
+  .faq-list summary{gap:16px;min-height:58px;line-height:1.5;font-size:16px}
+  .faq-list summary span{flex-shrink:0}
+  .footer-bottom{padding-bottom:72px;row-gap:12px}
+  .footer-top{gap:22px;margin-bottom:24px}
+  .footer-wordmark{gap:14px}
+  .footer-wordmark>img{width:clamp(64px,20vw,105px)}
+  .footer-wordmark>.footer-brand-name{font-size:clamp(48px,15vw,80px)}
+  .admin-header{padding:16px 4%;gap:10px}
+  .admin-header .wordmark{white-space:normal;min-width:0}
+  .admin-tabs{flex-wrap:wrap;gap:8px}
+  .admin-tabs button{min-height:44px;padding:10px 16px}
+  .admin-login{margin:32px auto}
+}
+@media (max-width:360px){
+  .nav .wordmark .nav-logo{width:30px;height:30px}
+  .nav .wordmark .brand-name{font-size:17px}
+  .nav .nav-contact{padding:10px 12px;font-size:11px}
+  .process-grid{grid-template-columns:1fr;gap:28px}
+  .stats>div{padding:20px 12px!important}
+  .stats strong{font-size:46px}
+  .detail-card{padding:22px}
+  .hero-eyebrow{font-size:13px}
+}
