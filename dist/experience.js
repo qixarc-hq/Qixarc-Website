@@ -11,13 +11,14 @@
   });
 
   let introSeen = false;
-  try { introSeen = sessionStorage.getItem('qixarc-intro') === 'seen'; } catch {}
+  try { introSeen = sessionStorage.getItem('qixarc-intro-v2') === 'seen'; } catch {}
   if (!introSeen && !reduced.matches) {
     const loader = document.createElement('div');
     loader.className = 'site-loader';
-    loader.innerHTML = '<div class="loader-content"><img class="loader-logo" src="/assets/logo-nav-opt.webp" alt="" width="80" height="80"><span class="loader-wordmark">QIXARC</span><div class="loader-track" role="progressbar" aria-label="Preparing QIXARC" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i class="loader-fill"></i></div><div class="loader-caption"><span>IDEAS INTO EXPERIENCES</span><span class="loader-percent">0%</span></div></div>';
+    loader.innerHTML = '<div class="loader-content"><img class="loader-logo" src="/assets/logo-nav-opt.webp" alt="" width="80" height="80"><span class="loader-wordmark">QIXARC</span><div class="loader-track" role="progressbar" aria-label="QIXARC introduction" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i class="loader-fill"></i></div><div class="loader-caption"><span>OPENING THE STUDIO</span><span class="loader-percent">0%</span></div></div>';
     document.body.append(loader);
-    let finished = false, completed = 1;
+    const started = performance.now();
+    let finished = false, frame = 0;
     const update = value => {
       loader.querySelector('.loader-fill').style.transform = `scaleX(${value / 100})`;
       loader.querySelector('.loader-track').setAttribute('aria-valuenow', String(value));
@@ -25,24 +26,52 @@
     };
     const finish = () => {
       if (finished) return;
-      finished = true; clearTimeout(limit);
-      try { sessionStorage.setItem('qixarc-intro', 'seen'); } catch {}
+      finished = true; cancelAnimationFrame(frame);
+      try { sessionStorage.setItem('qixarc-intro-v2', 'seen'); } catch {}
       update(100);
-      const exit = animate(loader, [{ opacity: 1 }, { opacity: 0 }], { duration: 260, delay: 120 });
+      const exit = animate(loader, [{ opacity: 1 }, { opacity: 0 }], { duration: 260 });
       if (exit) exit.finished.catch(() => {}).finally(() => loader.remove()); else loader.remove();
     };
-    const limit = setTimeout(finish, 1600);
-    const tasks = [document.fonts.ready, loader.querySelector('img').decode().catch(() => {})];
-    const heroImage = document.querySelector('.hero img:not([loading="lazy"])');
-    if (heroImage) tasks.push(heroImage.decode().catch(() => {}));
-    update(Math.round(100 / (tasks.length + 1)));
-    tasks.forEach(task => Promise.resolve(task).finally(() => {
-      if (finished) return;
-      completed++; update(Math.round(completed / (tasks.length + 1) * 100));
-      if (completed === tasks.length + 1) finish();
-    }));
+    const tick = now => {
+      const elapsed = now - started;
+      update(Math.min(100, Math.floor(elapsed / 3000 * 100)));
+      if (elapsed >= 3000) finish(); else frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    setTimeout(finish, 3500);
     reduced.addEventListener('change', finish, { once: true });
     document.addEventListener('keydown', finish, { once: true });
+  }
+
+  const hover = matchMedia('(hover: hover) and (pointer: fine)');
+  const cards = document.querySelectorAll('.interactive-card,.home-product-card,.team-profile,.detail-card,.cms-card,.catalogue-product,.journal-card');
+  cards.forEach(card => {
+    card.classList.add('motion-card');
+    let pending = false, x = 0, y = 0;
+    const reset = () => { card.style.removeProperty('--card-rx'); card.style.removeProperty('--card-ry'); };
+    card.addEventListener('pointermove', event => {
+      if (reduced.matches || !hover.matches) return;
+      const rect = card.getBoundingClientRect();
+      x = (event.clientX - rect.left) / rect.width - .5;
+      y = (event.clientY - rect.top) / rect.height - .5;
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(() => {
+        pending = false;
+        card.style.setProperty('--card-rx', `${(-y * 4).toFixed(2)}deg`);
+        card.style.setProperty('--card-ry', `${(x * 4).toFixed(2)}deg`);
+      });
+    });
+    card.addEventListener('pointerleave', reset);
+    reduced.addEventListener('change', reset);
+  });
+  if ('IntersectionObserver' in window && !reduced.matches) {
+    const entrances = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      animate(entry.target, [{ opacity: 0, transform: 'translateY(22px) scale(.975)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], { duration: 560 });
+      entrances.unobserve(entry.target);
+    }), { threshold: .12 });
+    document.querySelectorAll('.capability-card,.value-card,.page-art,.studio-card,.home-product-card,.team-profile,.detail-card,.cms-card').forEach(card => entrances.observe(card));
   }
 
   document.querySelectorAll('.wordmark').forEach(brand => brand.addEventListener('click', event => {

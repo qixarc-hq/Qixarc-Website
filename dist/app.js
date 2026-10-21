@@ -170,7 +170,7 @@
   const progress = document.querySelector('.scroll-progress');
   const updateProgress = () => {
     const total = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.transform = `scaleX(${total > 0 ? Math.max(0, Math.min(1, window.scrollY / total)) : 0})`;
+    if (progress) progress.style.transform = `scaleX(${total > 0 ? Math.max(0, Math.min(1, window.scrollY / total)) : 0})`;
     updateParallax();
     scrollPending = false;
   };

@@ -20,14 +20,15 @@ def enhance_home(home):
     home = re.sub(r'<a class="back-top".*?</a>', '', home, flags=re.S)
     home = re.sub(r'<button id="(?:motion-toggle|qbit-motion)".*?</button>', '', home, flags=re.S)
     home = re.sub(r'(<section class="services section" id="services">).*?(</section>)', lambda m: m[1] + '<div class="wrap"><div class="section-heading"><div><div class="section-label">03 / WHAT WE DO</div><h2 class="reveal">From first thought.<br>To final pixel.</h2></div><p>Design and engineering, connected.<br>Find the right starting point for your idea.</p></div>' + service_cards() + '</div>' + m[2], home, flags=re.S)
-    old = r'<div class="about-brand">.*?</div><div class="about-copy">'
-    studio = '<a class="about-brand studio-card interactive-card" href="/about/"><span class="card-index">QIXARC / MADURAI</span><div class="studio-image"><img src="/assets/studio-concept.webp" srcset="/assets/studio-concept-540.webp 540w, /assets/studio-concept.webp 900w" sizes="(max-width:760px) calc(100vw - 80px), 45vw" alt="Conceptual creative workspace with blue design objects" width="900" height="600" loading="lazy" decoding="async"></div><div class="studio-caption"><p>Independent minds.<br>Shared ambition.</p><span class="card-open" aria-hidden="true">↗</span></div><span class="card-action">Inside the studio ↗</span></a><div class="about-copy">'
+    old = r'(?:<div class="about-brand">.*?</div>|<a class="about-brand studio-card interactive-card".*?</a>)<div class="about-copy">'
+    studio = '<a class="about-brand studio-card interactive-card" href="/about/"><span class="card-index">QIXARC / MADURAI</span><div class="studio-image"><img src="/assets/studio-v2.webp" srcset="/assets/studio-v2-540.webp 540w, /assets/studio-v2.webp 900w" sizes="(max-width:760px) calc(100vw - 80px), 45vw" alt="Concept illustration of three sculptural figures collaborating at a table" width="900" height="600" loading="lazy" decoding="async"></div><div class="studio-caption"><p>Independent minds.<br>Shared ambition.</p><span class="card-open" aria-hidden="true">↗</span></div><span class="card-action">Inside the studio ↗</span></a><div class="about-copy">'
     home = re.sub(old, lambda m: studio, home, flags=re.S)
     home = home.replace('class="about-brand studio-card interactive-card"', 'class="about-brand studio-card interactive-card"')
     home = re.sub(r'<div class="about-values">.*?</div></div><a class="text-link"', '<div class="about-values">' + ''.join(f'<a class="value-card interactive-card" href="/about/#{key}"><span class="value-index">{i:02d}</span><div><h3>{name}</h3><p>{text}</p></div><b aria-hidden="true">↗</b></a>' for i,(key,name,text) in enumerate([('human-first','Human first','Useful experiences, built around real people.'),('built-with-purpose','Built with purpose','Every decision connects design to function.'),('ready-for-tomorrow','Ready for tomorrow','Clear foundations for your next chapter.')],1)) + '</div><a class="text-link"', home, flags=re.S)
     home = home.replace('href="#contact">Meet your next digital partner', 'href="/about/">Meet your next digital partner')
     home = home.replace('Our main service starting prices are listed above. Your final quote depends on pages, features, integrations, and the level of customization. You can also explore the detailed calculator on our current website.', 'Every project is scoped individually. Share your pages, features, integrations and preferred launch window, and we’ll discuss a clear proposal with you.')
     home = home.replace('SCROLL TO EXPLORE', '')
+    home = re.sub(r'<div class="scroll-progress"[^>]*></div>', '', home)
     if 'class="footer-legal"' not in home:
         home = home.replace('<div class="footer-bottom">', '<nav class="footer-legal" aria-label="Policies"><a href="/terms/">Terms &amp; conditions</a><a href="/privacy/">Privacy policy</a><a href="/cookies/">Cookies policy</a><a href="/contact/">Contact</a></nav><div class="footer-bottom">')
     home = home.replace('Your details are sent securely to the QIXARC team.</p>', 'Your details are sent securely to the QIXARC team. <a href="/privacy/">Privacy policy</a>.</p>')
@@ -49,6 +50,38 @@ def detail_pages(hero, cta):
         content += '<p class="legal-contact">Questions about this page? <a href="mailto:qixarc@gmail.com">qixarc@gmail.com ↗</a></p></article></section>'
         pages[slug] = (title.replace('<br>',' '),lead,content)
     return pages
+
+PAGE_ART = {
+    'about': ('studio-v2', 'Abstract sculptural figures collaborating around a table'),
+    'products': ('page-products', 'Conceptual product family with a profile, workspace, AI orb and mobile device'),
+    'story': ('page-story', 'An abstract blue path connecting ascending steps and an open arch'),
+    'research': ('page-research', 'Glass prototypes and optical instruments representing research'),
+    'blog': ('page-journal', 'An open notebook with blue ribbon and a sculptural cursor'),
+    'contact': ('page-contact', 'Connected blue and silver speech bubbles with a blank envelope'),
+    'terms': ('page-terms', 'A blank document stack with a blue glass paperweight'),
+    'privacy': ('page-privacy', 'A blue glass shield protecting a frosted sphere'),
+    'cookies': ('page-cookies', 'Three transparent capsules representing organised browser storage'),
+}
+
+def editorial_art(html, route):
+    html = re.sub(r'<!-- page-art -->.*?<!-- /page-art -->', '', html, flags=re.S)
+    html = re.sub(r'<div class="scroll-progress"[^>]*></div>', '', html)
+    article = route.startswith('blog/') and route != 'blog/post'
+    spec = PAGE_ART.get('blog' if article else route)
+    if not spec:
+        return html
+    asset, alt = spec
+    figure = ('<!-- page-art --><figure class="page-art">'
+        f'<img src="/assets/{asset}.webp" srcset="/assets/{asset}-540.webp 540w, /assets/{asset}.webp 900w" '
+        f'sizes="(max-width:760px) calc(100vw - 40px), 42vw" alt="{escape(alt, quote=True)}" '
+        'width="900" height="600" loading="lazy" decoding="async">'
+        '<figcaption>QIXARC / CONCEPT ILLUSTRATION</figcaption></figure><!-- /page-art -->')
+    if article:
+        html = html.replace('<div class="cms-article-body">', figure + '<div class="cms-article-body">', 1)
+    else:
+        html = re.sub(r'(<section class="detail-hero wrap(?: has-page-art)?">)(.*?)(</section>)',
+            lambda m: '<section class="detail-hero wrap has-page-art">' + m[2] + figure + m[3], html, count=1, flags=re.S)
+    return html
 
 POLICIES = [
     ('terms', 'Terms &amp;<br>conditions.', 'How to use this website and start a project with QIXARC.', [

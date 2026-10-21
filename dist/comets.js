@@ -1,6 +1,8 @@
 (() => {
-  const field = document.querySelector('.intro-comets');
-  if (!field) return;
+  document.querySelectorAll('.hero,.detail-hero,#intro,#about').forEach(host => {
+  host.classList.add('comet-host');
+  let field = host.querySelector(':scope > .intro-comets');
+  if (!field) { field = document.createElement('div'); field.className = 'intro-comets'; field.setAttribute('aria-hidden', 'true'); host.prepend(field); }
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const mobile = matchMedia('(max-width: 760px)');
   const random = (min, max) => min + Math.random() * (max - min);
@@ -8,11 +10,11 @@
   let particles = [];
   const rebuild = () => {
     field.replaceChildren();
-    particles = Array.from({ length: mobile.matches ? 5 : 24 }, (_, index) => {
+    particles = Array.from({ length: mobile.matches ? 9 : 40 }, (_, index) => {
       const element = document.createElement('span');
       element.className = 'intro-comet';
       field.append(element);
-      return { element, active: false, wait: random(120, 1500) + index * 380, time: 0 };
+      return { element, active: false, wait: random(40, 500) + index * (mobile.matches ? 110 : 75), time: 0 };
     });
   };
   const launch = particle => {
@@ -44,7 +46,7 @@
       if (particle.time >= 1) {
         particle.active = false;
         particle.element.style.opacity = '0';
-        particle.wait = mobile.matches ? random(900, 3400) : random(420, 2100);
+        particle.wait = mobile.matches ? random(800, 2000) : random(220, 1100);
         continue;
       }
       const progress = 1 - (1 - particle.time) ** 2;
@@ -67,4 +69,5 @@
   mobile.addEventListener('change', () => { rebuild(); sync(); });
   document.addEventListener('visibilitychange', sync);
   window.addEventListener('qixarc-motion', sync);
+  });
 })();

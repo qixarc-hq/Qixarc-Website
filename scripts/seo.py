@@ -2,6 +2,7 @@
 from pathlib import Path
 from html import escape
 import json
+import runpy
 import re
 
 BASE = 'https://www.qixarc.com'
@@ -94,19 +95,21 @@ def apply(root):
             html = html.replace('</head>', '<link rel="preload" href="/assets/fonts/sans.woff2" as="font" type="font/woff2" crossorigin>\n</head>')
         html = re.sub(r'<link rel="stylesheet" href="/mobile.css[^"\n]*">\s*', '', html)
         html = html.replace('</head>', '<link rel="stylesheet" href="/mobile.css?v=responsive-2">\n</head>')
-        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=experience-4', html)
-        html = re.sub(r'/guide.js\?v=[^" ]+', '/guide.js?v=experience-4', html)
+        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=artwork-5', html)
+        html = re.sub(r'/guide.js\?v=[^" ]+', '/guide.js?v=artwork-5', html)
         # Optimized copies retain the supplied artwork; originals stay available.
         for asset in ['serlow-logo.png', 'zevaris-ai-logo.png', 'decision-sphere-logo.png', 'scaler-profile.webp', 'qixarc-logo.webp', 'logo-nav.webp', 'web.webp']:
             html = html.replace('/assets/' + asset + '"', '/assets/' + Path(asset).stem + '-opt.webp"')
         html = html.replace('<img src="/assets/qixarc-logo-opt.webp" alt="" width="620" height="625">', '<img src="/assets/qixarc-logo-opt.webp" alt="" width="620" height="625" loading="lazy" decoding="async">')
         for asset in ['style.css', 'pages.css', 'navigation.js', 'comets.js', 'story.js', 'story-timeline.css', 'motion-loader.js']:
-            html = re.sub(r'/' + re.escape(asset) + r'(?:\?v=[^\" ]+)?(?=\")', '/' + asset + '?v=experience-4', html)
+            html = re.sub(r'/' + re.escape(asset) + r'(?:\?v=[^\" ]+)?(?=\")', '/' + asset + '?v=artwork-5', html)
         if route != 'admin':
             html = re.sub(r'<link rel="stylesheet" href="/experience.css[^"]*">\s*', '', html)
             html = re.sub(r'<script src="/experience.js[^"]*" defer></script>\s*', '', html)
-            html = html.replace('</head>', '<link rel="stylesheet" href="/experience.css?v=experience-4">\n<script src="/experience.js?v=experience-4" defer></script>\n</head>')
+            html = html.replace('</head>', '<link rel="stylesheet" href="/experience.css?v=artwork-5">\n<script src="/experience.js?v=artwork-5" defer></script>\n</head>')
         html = re.sub(r'<button\b(?=[^>]*\bid="(?:qbit-motion|motion-toggle|story-motion)")[^>]*>.*?</button>', '', html, flags=re.S)
+        if route != 'admin':
+            html = runpy.run_path(str(Path(__file__).with_name('experience-content.py')))['editorial_art'](html, route)
         path.write_text(html, encoding='utf-8')
     entries = []
     for route in pages:

@@ -1,0 +1,56 @@
+{
+  "studio-v2": {
+    "prompt": "Use case: stylized-concept. Asset type: premium QIXARC website editorial illustration. Subject: an editorial still life representing a small creative technology team: three distinct cobalt blue, silver and frosted glass sculptural objects gathered around a round white collaboration table; subtle design sheets and one slim laptop, no people, no actual-office claim. Palette: electric cobalt blue #2445f5, midnight navy, frosted glass and brushed silver on a very light cool off-white background. Restrained sophisticated 3D studio rendering, tactile physically believable materials, soft directional light, carefully balanced negative space, wide landscape 3:2 composition, generous safe margins so the main objects remain visible when cropped on mobile. No lettering, no words, no logos, no watermark. Concept artwork only.",
+    "tool": "built-in image generation",
+    "asset": "dist/assets/studio-v2.webp",
+    "mobile_asset": "dist/assets/studio-v2-540.webp"
+  },
+  "page-products": {
+    "prompt": "Use case: stylized-concept. Asset type: premium QIXARC website editorial illustration. Subject: a curated family of four original digital product objects: an abstract profile card, a modular workspace, an intelligent orb, and a mobile handset, each represented as sculptural blue glass and silver devices, carefully arranged on stepped white plinths. Palette: electric cobalt blue #2445f5, midnight navy, frosted glass and brushed silver on a very light cool off-white background. Restrained sophisticated 3D studio rendering, tactile physically believable materials, soft directional light, carefully balanced negative space, wide landscape 3:2 composition, generous safe margins so the main objects remain visible when cropped on mobile. No lettering, no words, no logos, no watermark. Concept artwork only.",
+    "tool": "built-in image generation",
+    "asset": "dist/assets/page-products.webp",
+    "mobile_asset": "dist/assets/page-products-540.webp"
+  },
+  "page-research": {
+    "prompt": "Use case: stylized-concept. Asset type: premium QIXARC website editorial illustration. Subject: a sculptural research laboratory still life: cobalt glass lens, a transparent geometric prototype and a silver observation instrument, expressing testing, evidence and exploration. Palette: electric cobalt blue #2445f5, midnight navy, frosted glass and brushed silver on a very light cool off-white background. Restrained sophisticated 3D studio rendering, tactile physically believable materials, soft directional light, carefully balanced negative space, wide landscape 3:2 composition, generous safe margins so the main objects remain visible when cropped on mobile. No lettering, no words, no logos, no watermark. Concept artwork only.",
+    "tool": "built-in image generation",
+    "asset": "dist/assets/page-research.webp",
+    "mobile_asset": "dist/assets/page-research-540.webp"
+  },
+  "page-story": {
+    "prompt": "Use case: stylized-concept. Asset type: editorial illustration for the story page of QIXARC, a design and technology studio. Subject: an elegant abstract growth journey made of five ascending white architectural steps, a cobalt blue seed-like orb at the start and an open silver arch at the top, subtle connecting blue ribbon, hopeful and human, not a timeline chart. Palette: electric cobalt blue #2445f5, midnight navy, frosted glass and brushed silver on a very light cool off-white background. Premium understated 3D studio still life, realistic tactile materials, soft directional lighting, wide landscape 3:2 composition with generous safe margins and balanced negative space. No text, labels, logos or watermark. Conceptual illustration.",
+    "tool": "built-in image generation",
+    "asset": "dist/assets/page-story.webp",
+    "mobile_asset": "dist/assets/page-story-540.webp"
+  },
+  "page-journal": {
+    "prompt": "Use case: stylized-concept. Asset type: editorial illustration for the journal page of QIXARC, a design and technology studio. Subject: an open white notebook with blank pages, a cobalt blue ribbon flowing into a delicate metallic cursor shape and a few blue glass paper-like panels, representing writing about intentional interface design and motion. Palette: electric cobalt blue #2445f5, midnight navy, frosted glass and brushed silver on a very light cool off-white background. Premium understated 3D studio still life, realistic tactile materials, soft directional lighting, wide landscape 3:2 composition with generous safe margins and balanced negative space. No text, labels, logos or watermark. Conceptual illustration.",
+    "tool": "built-in image generation",
+    "asset": "dist/assets/page-journal.webp",
+    "mobile_asset": "dist/assets/page-journal-540.webp"
+  },
+  "page-contact": {
+    "prompt": "Use case: stylized-concept. Asset type: editorial illustration for the contact page of QIXARC, a design and technology studio. Subject: two sculptural speech bubbles, one cobalt blue glass and one brushed silver, connected by a delicate loop on an off-white tabletop, a small blank envelope nearby, representing a clear friendly conversation. Palette: electric cobalt blue #2445f5, midnight navy, frosted glass and brushed silver on a very light cool off-white background. Premium understated 3D studio still life, realistic tactile materials, soft directional lighting, wide landscape 3:2 composition with generous safe margins and balanced negative space. No text, labels, logos or watermark. Conceptual illustration.",
+    "tool": "built-in image generation",
+    "asset": "dist/assets/page-contact.webp",
+    "mobile_asset": "dist/assets/page-contact-540.webp"
+  },
+  "page-terms": {
+    "prompt": "Use case: stylized-concept. Asset type: editorial illustration for the terms page of QIXARC, a design and technology studio. Subject: an elegant blank white document stack held by a cobalt blue glass paperweight and a brushed silver geometric arch, representing clear working agreements. Palette: electric cobalt blue #2445f5, midnight navy, frosted glass and brushed silver on a very light cool off-white background. Premium understated 3D studio still life, realistic tactile materials, soft directional lighting, wide landscape 3:2 composition with generous safe margins and balanced negative space. No text, labels, logos or watermark. Conceptual illustration.",
+    "tool": "built-in image generation",
+    "asset": "dist/assets/page-terms.webp",
+    "mobile_asset": "dist/assets/page-terms-540.webp"
+  },
+  "page-privacy": {
+    "prompt": "Use case: stylized-concept. Asset type: editorial illustration for the privacy page of QIXARC, a design and technology studio. Subject: a cobalt blue translucent shield surrounding a small frosted glass sphere, placed on a silver circular base, representing privacy and controlled access, no lock icon, no words. Palette: electric cobalt blue #2445f5, midnight navy, frosted glass and brushed silver on a very light cool off-white background. Premium understated 3D studio still life, realistic tactile materials, soft directional lighting, wide landscape 3:2 composition with generous safe margins and balanced negative space. No text, labels, logos or watermark. Conceptual illustration.",
+    "tool": "built-in image generation",
+    "asset": "dist/assets/page-privacy.webp",
+    "mobile_asset": "dist/assets/page-privacy-540.webp"
+  },
+  "page-cookies": {
+    "prompt": "Use case: stylized-concept. Asset type: editorial illustration for the cookies page of QIXARC, a design and technology studio. Subject: a set of three orderly transparent glass storage capsules with cobalt blue lids on a clean silver tray, representing temporary browser storage and clear choices, abstract technology objects rather than food. Palette: electric cobalt blue #2445f5, midnight navy, frosted glass and brushed silver on a very light cool off-white background. Premium understated 3D studio still life, realistic tactile materials, soft directional lighting, wide landscape 3:2 composition with generous safe margins and balanced negative space. No text, labels, logos or watermark. Conceptual illustration.",
+    "tool": "built-in image generation",
+    "asset": "dist/assets/page-cookies.webp",
+    "mobile_asset": "dist/assets/page-cookies-540.webp"
+  }
+}
