@@ -45,3 +45,13 @@ Nine new generated illustrations cover studio/about, products, story, research, 
 Cards now rise and tilt with a fine pointer and have entrance/tap feedback. Touch layouts avoid pointer tilt. Shooting stars use 40 elements per desktop field and 9 per phone field, on the homepage hero, introduction and studio section, and detail-page heroes. Only visible fields animate; hidden tabs and reduced-motion devices stop decorative motion.
 
 Build and SEO checks pass for 16 sitemap routes. All 16 public pages pass asset/link/anchor checks and contain no scroll-progress element. Browser frame layouts were checked at 320, 375, 760, 1024 and 1280px (80 combinations, no horizontal overflow). No physical-device or fresh Lighthouse result is claimed. The existing Story biography and enquiry submission logic are unchanged.
+
+
+## Orbital reference refinement — 21 October 2026
+
+- Recreated the supplied loading reference as live CSS/DOM: blue ambient light, orbital rings, metallic QIXARC logo, floating cards and percentage progress. The intro runs for 2,000 ms plus a 220 ms fade, once per tab under `qixarc-intro-v3`. Pointer movement tilts the composition and a tap gives brief scale feedback. Reduced motion skips it; any key dismisses it. No screenshot-sized raster asset or new rendering dependency is required.
+- Matched the supplied landing reference with blue lighting arcs, maintained the existing brand fonts, increased supporting-copy weight, and refined section 01 label, number, heading and statistics spacing.
+- Only the first FAQ opens when scrolled into view. Remaining questions require a click or keyboard activation; answers and plus/minus states retain smooth transitions.
+- Selected navigation is black with white text, including parent Services on service detail pages. Shared controls transition to black/white on hover, focus and press. Mobile hero button fill is contained within its own hit target.
+- The top-left logo moves left and returns on click before navigating home. Ambient hero layers pause offscreen and when the page is hidden. Existing coarse-pointer and reduced-motion policies remain.
+- Verification: Python build/SEO suite passed for all 16 sitemap pages; JS syntax and whitespace checks passed. Browser verified FAQ first-only automatic opening and manual opening/closing, black selected menu states on desktop/mobile, and logo navigation from a service page. 20 representative viewport/route combinations (320, 375, 760, 1024, 1280 px across home, service detail, contact, privacy) showed no horizontal overflow. Desktop and phone-sized orbital/hero layouts were visually inspected. These are browser viewport checks, not physical-device or fresh Lighthouse measurements.

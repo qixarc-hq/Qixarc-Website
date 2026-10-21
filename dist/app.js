@@ -163,7 +163,7 @@
   const updateNavigation = () => {
     const normalize = path => path.replace(/index\.html$/, '').replace(/\/+$/, '') || '/';
     links.querySelectorAll('a').forEach(link => {
-      if (normalize(link.pathname) === normalize(location.pathname) || (link.pathname === '/blog/' && location.pathname.startsWith('/blog/'))) link.setAttribute('aria-current', 'page');
+      if (normalize(link.pathname) === normalize(location.pathname) || (link.pathname !== '/' && location.pathname.startsWith(link.pathname))) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
   };
