@@ -87,7 +87,7 @@ def apply(root):
             html = html.replace('</head>', '<link rel="preload" href="/assets/fonts/sans.woff2" as="font" type="font/woff2" crossorigin>\n</head>')
         html = re.sub(r'<link rel="stylesheet" href="/mobile.css[^"\n]*">\s*', '', html)
         html = html.replace('</head>', '<link rel="stylesheet" href="/mobile.css?v=responsive-2">\n</head>')
-        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=responsive-2', html)
+        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=enquiries-3', html)
         html = re.sub(r'/guide.js\?v=[^" ]+', '/guide.js?v=responsive-2', html)
         # Optimized copies retain the supplied artwork; originals stay available.
         for asset in ['serlow-logo.png', 'zevaris-ai-logo.png', 'decision-sphere-logo.png', 'scaler-profile.webp', 'qixarc-logo.webp', 'logo-nav.webp', 'web.webp']:

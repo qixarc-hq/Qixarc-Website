@@ -274,7 +274,7 @@
       { opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }
     ], 420);
   }).observe(status, { childList: true, characterData: true, subtree: true });
-  let submissionId = null;
+  let pendingSubmission = null;
   const submitButton = form?.querySelector('[type="submit"]');
   if (form) {
     submitButton.textContent = 'Send project enquiry →';
@@ -287,24 +287,43 @@
   }
   form?.addEventListener('submit', async event => {
     event.preventDefault();
-    if (!form.reportValidity() || submitButton.disabled) return;
+    if (submitButton.disabled) return;
+    for (const name of ['name', 'email', 'message']) form.elements[name].value = form.elements[name].value.trim();
+    if (!form.reportValidity()) return;
     const data = new FormData(form);
     if (data.get('company_website')) { setFormStatus('Unable to submit this enquiry.'); return; }
     if (!window.qixarcDB) { setFormStatus('Connection unavailable. Please retry or email qixarc@gmail.com.'); return; }
-    submissionId ||= crypto.randomUUID();
+    const payload = {
+      name: String(data.get('name')), email: String(data.get('email')),
+      service: String(data.get('service') || 'A new digital project'), message: String(data.get('message'))
+    };
+    const fingerprint = JSON.stringify(payload);
+    // Reuse an ID only for the same enquiry after an uncertain network result.
+    if (pendingSubmission?.fingerprint !== fingerprint) pendingSubmission = { id: crypto.randomUUID(), fingerprint };
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    const fields = [...form.querySelectorAll('input, textarea, select')].filter(field => !field.disabled);
+    fields.forEach(field => { field.disabled = true; });
+    form.setAttribute('aria-busy', 'true');
     submitButton.disabled = true; submitButton.textContent = 'Sending…';
     setFormStatus('Sending your enquiry…');
     try {
-      const { error } = await window.qixarcDB.from('qixarc_enquiries').insert({
-        id: submissionId,
-        name: String(data.get('name')).trim(), email: String(data.get('email')).trim(),
-        service: String(data.get('service') || 'A new digital project'), message: String(data.get('message')).trim()
-      });
-      if (error && error.code !== '23505') throw error;
-      form.reset(); submissionId = null;
+      const { error } = await window.qixarcDB.from('qixarc_enquiries')
+        .insert({ id: pendingSubmission.id, ...payload }).abortSignal(controller.signal);
+      const confirmedRetry = error?.code === '23505' && error.message?.includes('qixarc_enquiries_pkey');
+      if (error && !confirmedRetry) throw error;
+      form.reset(); pendingSubmission = null;
       setFormStatus('Thank you. Your enquiry has been received by QIXARC.');
-    } catch { setFormStatus('Your enquiry could not be confirmed. Please retry or email qixarc@gmail.com. Your details are still in the form.'); }
-    finally { submitButton.disabled = false; submitButton.textContent = 'Send project enquiry →'; }
+    } catch {
+      setFormStatus(controller.signal.aborted
+        ? 'The connection took too long. Your enquiry could not be confirmed. Please retry or email qixarc@gmail.com. Your details are still in the form.'
+        : 'Your enquiry could not be confirmed. Please retry or email qixarc@gmail.com. Your details are still in the form.');
+    } finally {
+      clearTimeout(timeout);
+      fields.forEach(field => { field.disabled = false; });
+      form.removeAttribute('aria-busy');
+      submitButton.disabled = false; submitButton.textContent = 'Send project enquiry →';
+    }
   });
   const motionToggle = document.querySelector('#motion-toggle');
   let paused = reducedMotion.matches;
