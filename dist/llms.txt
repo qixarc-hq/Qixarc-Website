@@ -3,6 +3,13 @@
 > Web design, development and digital products. Based in Madurai, India; international project enquiries welcome.
 
 ## Official pages
+- [Website Terms & Conditions](https://www.qixarc.com/terms/): Read the terms for using the QIXARC website, starting project enquiries and exploring products in development.
+- [Privacy Policy](https://www.qixarc.com/privacy/): How QIXARC handles website enquiries, administrator sessions and requests about your information.
+- [Cookies & Browser Storage](https://www.qixarc.com/cookies/): Learn about temporary browser storage, administrator sessions and your browser controls on the QIXARC website.
+- [UI/UX Design Services](https://www.qixarc.com/services/ui-ux-design/): Explore QIXARC’s approach to user journeys, interface design and interactive prototyping for your next digital product.
+- [Web Development Services](https://www.qixarc.com/services/web-development/): Responsive websites and web experiences built around your content, audience and launch requirements.
+- [E-commerce Development Services](https://www.qixarc.com/services/e-commerce/): Considered storefronts, product catalogues and shopping journeys designed with QIXARC.
+- [Custom Digital Systems](https://www.qixarc.com/services/digital-systems/): Focused applications, custom workflows and integrations shaped around your team’s everyday work.
 - [QIXARC](https://www.qixarc.com/): QIXARC builds business websites, e-commerce experiences and digital products. Based in India and welcoming international clients. Discuss your project.
 - [Our Story & QBit](https://www.qixarc.com/story/): Meet QBit, QIXARC’s digital companion, and follow our journey from early ideas to software, AI and automation products.
 - [Digital Products: Scaler Profile, Serlow & AI](https://www.qixarc.com/products/): Explore Scaler Profile, Zevaris AI, Serlow and Decision Sphere: QIXARC products for messaging, intelligent assistance, teamwork and mobile assistance.

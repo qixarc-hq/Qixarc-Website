@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.qixarc.com/terms/</loc></url>
+  <url><loc>https://www.qixarc.com/privacy/</loc></url>
+  <url><loc>https://www.qixarc.com/cookies/</loc></url>
+  <url><loc>https://www.qixarc.com/services/ui-ux-design/</loc></url>
+  <url><loc>https://www.qixarc.com/services/web-development/</loc></url>
+  <url><loc>https://www.qixarc.com/services/e-commerce/</loc></url>
+  <url><loc>https://www.qixarc.com/services/digital-systems/</loc></url>
   <url><loc>https://www.qixarc.com/</loc></url>
   <url><loc>https://www.qixarc.com/story/</loc></url>
   <url><loc>https://www.qixarc.com/products/</loc></url>

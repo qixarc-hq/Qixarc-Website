@@ -4,7 +4,7 @@
   new ResizeObserver(measure).observe(header);
   measure();
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const routes = ['home', 'story', 'products', 'services', 'about', 'research', 'blog', 'contact', 'blog/motion-with-purpose', 'blog/post'];
+  const routes = ['home', 'story', 'products', 'services', 'about', 'research', 'blog', 'contact', 'blog/motion-with-purpose', 'blog/post', 'terms', 'privacy', 'cookies', 'services/ui-ux-design', 'services/web-development', 'services/e-commerce', 'services/digital-systems'];
   const pathKey = path => path.replace(/index\.html$/, '').replace(/\/+$/, '') || '/';
   const curtain = document.createElement('div');
   curtain.className = 'page-curtain';

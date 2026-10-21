@@ -3,9 +3,11 @@ from pathlib import Path
 import re
 import runpy
 content = runpy.run_path(str(Path(__file__).with_name("product-story.py")))
+experience = runpy.run_path(str(Path(__file__).with_name("experience-content.py")))
 
 root = Path(__file__).resolve().parents[1] / 'dist'
 home = (root / 'index.html').read_text(encoding='utf-8')
+home = experience['enhance_home'](home)
 home = re.sub(r'<link[^>]+fonts\.(?:googleapis|gstatic)[^>]+>\s*', '', home)
 home = re.sub(r'<link href="https://fonts.googleapis.com[^>]+>\s*', '', home)
 home = re.sub(r'/style.css\?v=[^" ]+', '/style.css?v=pages-1', home)
@@ -94,6 +96,18 @@ pages['contact'] = ('Contact', 'Start a conversation with QIXARC about your next
 
 pages['products'] = content['product_page'](hero, cta)
 pages['story'] = content['story_page'](hero, cta)
+pages.update(experience['detail_pages'](hero, cta))
+pages['services'] = (pages['services'][0], pages['services'][1],
+    hero('03', 'CAPABILITIES', 'Choose the problem.<br>We’ll shape the build.', 'Explore our design and engineering capabilities, then bring us your starting point.') +
+    '<section class="wrap detail-section">' + experience['service_cards']() + '</section>' +
+    cta('Bring the rough version.', 'A sketch, an existing site or a workflow description is enough to begin.'))
+about_title, about_description, about_content = pages['about']
+about_content += '<section class="wrap detail-section studio-principles"><div class="section-label">THE WAY WE WORK</div>' + ''.join(
+    f'<article id="{key}"><span class="card-index">{i:02d}</span><h2>{name}</h2><p>{text}</p></article>' for i,(key,name,text) in enumerate([
+        ('human-first','Human first','We begin with the people who will use the product, the tasks they need to complete and the information they need to act.'),
+        ('built-with-purpose','Built with purpose','Each design and engineering choice should help the experience do something useful. We connect visual direction to the actual workflow.'),
+        ('ready-for-tomorrow','Ready for tomorrow','Reusable components, clear content and thoughtful handover leave room for the next iteration without adding unnecessary complexity.')],1)) + '</section>'
+pages['about'] = (about_title, about_description, about_content)
 head = home.split('<body>')[0]
 if '/about-motion.js' not in head:
     head = head.replace('</head>', '<script src="/about-motion.js?v=product-logos-1" defer></script></head>')

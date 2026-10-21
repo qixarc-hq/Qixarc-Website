@@ -135,7 +135,7 @@
     ['.sculpture', 0.09, '.showcase'],
     ['.project-visual img, .work-cover', 0.08, '.project'],
     ['.asterisk, .swatches', -0.07, '.services'],
-    ['.about-brand > div', 0.08, '.about'],
+    ['.about-brand > .about-logo', 0.08, '.about'],
     ['.contact h2', 0.04, '.contact'],
     ['.footer-wordmark', 0.05, 'footer']
   ].forEach(([selector, speed, parent]) => {
@@ -183,49 +183,6 @@
   window.addEventListener('qixarc-motion', scheduleScrollUpdate);
   updateNavigation();
   updateProgress();
-  const services = {
-    design: { title: 'Thoughtful by design.', description: 'Intuitive interfaces and memorable digital experiences. We pair a clear visual identity with user journeys that make every interaction feel natural.', tags: ['Interface design', 'User experience', 'Prototyping'], glyph: 'Aa', color: 'linear-gradient(125deg,#008bea,#2445f5,#843cff)', label: 'CLARITY MEETS CHARACTER' },
-    web: { title: 'Your ambition, engineered.', description: 'From a focused portfolio to a dynamic web application, we build responsive digital products with modern technology and the foundations to grow alongside your business.', tags: ['Responsive websites', 'Full-stack development', 'Performance'], glyph: '</>', color: 'linear-gradient(125deg,#080d36,#2636ce)', label: 'PRECISION IN EVERY PIXEL' },
-    commerce: { title: 'Make your next sale simple.', description: 'Bring your products online with a complete store experience. We create clear product discovery and considered shopping journeys, shaped around your brand and customers.', tags: ['Online stores', 'Product catalogues', 'Shopping experiences'], glyph: 'e.', color: 'linear-gradient(125deg,#0054cc,#6330c5)', label: 'BUILT AROUND YOUR CUSTOMERS' },
-    systems: { title: 'Smarter behind the scenes.', description: 'Custom digital systems that simplify your workflows. We connect thoughtful interfaces with scalable functionality, helping your team work efficiently and your business move forward.', tags: ['Dynamic applications', 'Custom workflows', 'Scalable systems'], glyph: '{ }', color: 'linear-gradient(125deg,#162bc2,#763bdd)', label: 'COMPLEXITY, MADE SIMPLE' }
-  };
-  const tabs = [...document.querySelectorAll('[data-service]')];
-  const panel = document.querySelector('#service-panel');
-  function selectService(tab) {
-    const service = services[tab.dataset.service];
-    tabs.forEach(button => {
-      const selected = button === tab;
-      button.setAttribute('aria-selected', String(selected));
-      button.tabIndex = selected ? 0 : -1;
-      button.querySelector('b').textContent = selected ? '−' : '＋';
-    });
-    panel.setAttribute('aria-labelledby', tab.id);
-    document.querySelector('#service-title').textContent = service.title;
-    document.querySelector('#service-description').textContent = service.description;
-    document.querySelector('#service-tags').replaceChildren(...service.tags.map(tag => {
-      const span = document.createElement('span'); span.textContent = tag; return span;
-    }));
-    document.querySelector('.service-monogram').textContent = service.glyph;
-    document.querySelector('.service-graphic').style.background = service.color;
-    document.querySelector('.graphic-label').textContent = service.label;
-    if (!reducedMotion.matches) panel.animate([{ opacity: 0.5, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 350, easing: 'ease-out' });
-  }
-  tabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => selectService(tab));
-    tab.addEventListener('keydown', event => {
-      let next;
-      if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (index + 1) % tabs.length;
-      if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (index + tabs.length - 1) % tabs.length;
-      if (event.key === 'Home') next = 0;
-      if (event.key === 'End') next = tabs.length - 1;
-      if (next !== undefined) { event.preventDefault(); tabs[next].focus(); selectService(tabs[next]); }
-    });
-  });
-  document.querySelectorAll('.faq-list details').forEach(item => {
-    item.addEventListener('toggle', () => {
-      if (item.open) document.querySelectorAll('.faq-list details').forEach(other => { if (other !== item) other.open = false; });
-    });
-  });
   document.querySelectorAll('[data-plan]').forEach(link => {
     link.addEventListener('click', () => {
       const input = [...document.querySelectorAll('input[name="service"]')].find(input => input.value === link.dataset.plan);
@@ -279,7 +236,7 @@
   if (form) {
     submitButton.textContent = 'Send project enquiry →';
     const help = form.querySelector('.form-help');
-    if (help) help.textContent = 'Your details are sent securely to the QIXARC team.';
+    if (help) { help.textContent = 'Your details are sent securely to the QIXARC team. '; const privacy = document.createElement('a'); privacy.href = '/privacy/'; privacy.textContent = 'Privacy policy'; help.append(privacy); }
     if (copy) copy.hidden = true;
     const trap = document.createElement('input');
     trap.name = 'company_website'; trap.tabIndex = -1; trap.autocomplete = 'off';

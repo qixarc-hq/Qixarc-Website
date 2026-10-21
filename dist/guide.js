@@ -3,9 +3,7 @@ import { richMotionAllowed, watchMotionPreference } from './motion-policy.js';
 const guide = document.querySelector('#qbit-guide');
 const launcher = document.querySelector('#qbit-launcher');
 const panel = document.querySelector('#qbit-panel');
-const motionButton = document.querySelector('#qbit-motion');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-let localPaused = false;
 let sitePaused = document.body.classList.contains('motion-paused');
 let open = false;
 const stops = [
@@ -13,7 +11,7 @@ const stops = [
   ['products', 'Explore our products.', 'Meet Scaler Profile, Zevaris AI, Serlow and Decision Sphere, and see where each product is in development.', 'Explore services'],
   ['services', 'What are you building?', 'Explore the capabilities and deliverables, then tell us what your project needs.', 'Meet the team'],
   ['about', 'Meet your collaborators.', 'Get to know QIXARC and how we take a project from first idea to launch.', 'Start a conversation'],
-  ['contact', 'Let’s make it happen.', 'Tell us about your idea. The form securely sends your enquiry to the QIXARC team.', 'Back to the top']
+  ['contact', 'Let’s make it happen.', 'Tell us about your idea. The form securely sends your enquiry to the QIXARC team.', 'Explore our products']
 ];
 if (document.body.dataset.page) {
   stops[3][3] = 'Explore R&D';
@@ -22,6 +20,37 @@ if (document.body.dataset.page) {
   stops[0][3] = 'Hear our story';
   stops.splice(1, 0, ['story', 'Let me tell you our story.', 'Follow the chapters from Kabibalan’s first steps to the QIXARC product lineup.', 'Meet our products']);
 }
+const nudge = document.createElement('div');
+nudge.className = 'qbit-help'; nudge.hidden = true;
+nudge.innerHTML = '<button type="button" class="qbit-help-open">Any help, mate? <span aria-hidden="true">↗</span></button><button type="button" class="qbit-help-dismiss" aria-label="Dismiss Qbit help">×</button>';
+guide.prepend(nudge);
+let idleTimer, nudgeShown = false;
+try { nudgeShown = sessionStorage.getItem('qixarc-qbit-help') === 'seen'; } catch {}
+function hideNudge() { nudge.hidden = true; }
+function showNudge() {
+  if (nudgeShown || document.hidden || open || document.body.classList.contains('nav-open') || document.activeElement?.matches('input,textarea,select')) return;
+  nudgeShown = true;
+  try { sessionStorage.setItem('qixarc-qbit-help', 'seen'); } catch {}
+  nudge.hidden = false;
+  nudge.setAttribute('role', 'status');
+  if (!reduced.matches) nudge.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 280, easing: 'ease-out' });
+}
+function restartIdle() {
+  clearTimeout(idleTimer);
+  if (!nudgeShown && !document.hidden) idleTimer = setTimeout(showNudge, 30000);
+}
+nudge.querySelector('.qbit-help-open').addEventListener('click', () => { setOpen(true); panel.querySelector('a').focus(); startVisual(); });
+nudge.querySelector('.qbit-help-dismiss').addEventListener('click', () => { hideNudge(); launcher.focus(); });
+let lastActivity = 0;
+const activity = () => {
+  const now = performance.now();
+  if (now - lastActivity < 250) return;
+  lastActivity = now; restartIdle();
+};
+['pointermove', 'pointerdown', 'keydown', 'scroll'].forEach(type => window.addEventListener(type, activity, { passive: true }));
+document.addEventListener('visibilitychange', restartIdle);
+restartIdle();
+
 let active = 0;
 function showStop(index) {
   active = index;
@@ -29,14 +58,16 @@ function showStop(index) {
   document.querySelector('#qbit-tip').textContent = stops[index][2];
   const next = document.querySelector('#qbit-next');
   next.textContent = `${stops[index][3]} ↗`;
-  const nextId = stops[(index + 1) % stops.length][0];
+  const nextId = stops[(index + 1) % stops.length][0] === 'top' ? 'products' : stops[(index + 1) % stops.length][0];
   next.href = document.body.dataset.page ? (nextId === 'top' ? '/' : `/${nextId}/`) : `#${nextId}`;
   document.querySelector('#qbit-step').textContent = `${String(index + 1).padStart(2, '0')} / ${String(stops.length).padStart(2, '0')}`;
 }
 function setOpen(value) {
   open = value;
+  if (value) { hideNudge(); launcher.querySelector('.qbit-caption').textContent = 'Your guide ↗'; }
   panel.hidden = !value;
   launcher.setAttribute('aria-expanded', String(value));
+  restartIdle();
   launcher.setAttribute('aria-label', value ? 'Minimize Qbit website guide' : 'Open Qbit website guide');
   guide.classList.toggle('is-open', value);
 }
@@ -56,7 +87,7 @@ document.querySelectorAll('#qbit-panel a').forEach(link => link.addEventListener
   const heading = target.querySelector('h1, h2') || target;
   heading.setAttribute('tabindex', '-1');
   heading.focus({ preventScroll: true });
-  const behavior = reduced.matches || sitePaused || localPaused ? 'instant' : 'smooth';
+  const behavior = reduced.matches || sitePaused ? 'instant' : 'smooth';
   if (id === 'top') window.scrollTo({ top: 0, behavior });
   else target.scrollIntoView({ behavior, block: 'start' });
 }));
@@ -65,7 +96,7 @@ function trackSection() {
   scrollQueued = false;
   if (document.body.dataset.page) { showStop(Math.max(0, stops.findIndex(stop => stop[0] === document.body.dataset.page.split('/')[0]))); return; }
   let index = 0;
-  stops.forEach((stop, i) => { if (document.getElementById(stop[0]).getBoundingClientRect().top <= innerHeight * 0.45) index = i; });
+  stops.forEach((stop, i) => { if (document.getElementById(stop[0])?.getBoundingClientRect().top <= innerHeight * 0.45) index = i; });
   if (index !== active) showStop(index);
 }
 window.addEventListener('scroll', () => {
@@ -74,26 +105,8 @@ window.addEventListener('scroll', () => {
 showStop(0);
 trackSection();
 
-const isPaused = () => reduced.matches || sitePaused || localPaused;
-function updateMotionLabel() {
-  motionButton.setAttribute('aria-pressed', String(isPaused()));
-  motionButton.textContent = reduced.matches || sitePaused ? 'Motion paused' : localPaused ? 'Resume Qbit' : 'Pause Qbit';
-  motionButton.disabled = reduced.matches || sitePaused;
-}
-motionButton.addEventListener('click', () => { localPaused = !localPaused; updateMotionLabel(); });
-window.addEventListener('qixarc-motion', event => { sitePaused = event.detail.paused; updateMotionLabel(); });
-reduced.addEventListener('change', updateMotionLabel);
-updateMotionLabel();
-const storyMotion = document.querySelector('#story-motion');
-if (storyMotion) {
-  storyMotion.hidden = false;
-  const syncStoryMotion = () => { storyMotion.setAttribute('aria-pressed', String(isPaused())); storyMotion.textContent = isPaused() ? 'Resume QBit ▷' : 'Pause QBit Ⅱ'; storyMotion.disabled = reduced.matches || sitePaused; };
-  storyMotion.addEventListener('click', () => { localPaused = !localPaused; updateMotionLabel(); syncStoryMotion(); });
-  motionButton.addEventListener('click', syncStoryMotion);
-  window.addEventListener('qixarc-motion', syncStoryMotion);
-  reduced.addEventListener('change', syncStoryMotion);
-  syncStoryMotion();
-}
+const isPaused = () => reduced.matches || sitePaused;
+window.addEventListener('qixarc-motion', event => { sitePaused = event.detail.paused; });
 
 let visualStarted = false;
 function startVisual() {

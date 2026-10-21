@@ -6,6 +6,13 @@ import re
 
 BASE = 'https://www.qixarc.com'
 PAGES = {
+    'terms': ('Website Terms & Conditions | QIXARC', 'Read the terms for using the QIXARC website, starting project enquiries and exploring products in development.'),
+    'privacy': ('Privacy Policy | QIXARC', 'How QIXARC handles website enquiries, administrator sessions and requests about your information.'),
+    'cookies': ('Cookies & Browser Storage | QIXARC', 'Learn about temporary browser storage, administrator sessions and your browser controls on the QIXARC website.'),
+    'services/ui-ux-design': ('UI/UX Design Services | QIXARC', 'Explore QIXARC’s approach to user journeys, interface design and interactive prototyping for your next digital product.'),
+    'services/web-development': ('Web Development Services | QIXARC', 'Responsive websites and web experiences built around your content, audience and launch requirements.'),
+    'services/e-commerce': ('E-commerce Development Services | QIXARC', 'Considered storefronts, product catalogues and shopping journeys designed with QIXARC.'),
+    'services/digital-systems': ('Custom Digital Systems | QIXARC', 'Focused applications, custom workflows and integrations shaped around your team’s everyday work.'),
     '': ('QIXARC | Web Design, Development & Digital Products', 'QIXARC builds business websites, e-commerce experiences and digital products. Based in India and welcoming international clients. Discuss your project.'),
     'story': ('Our Story & QBit | QIXARC', 'Meet QBit, QIXARC’s digital companion, and follow our journey from early ideas to software, AI and automation products.'),
     'products': ('Digital Products: Scaler Profile, Serlow & AI | QIXARC', 'Explore Scaler Profile, Zevaris AI, Serlow and Decision Sphere: QIXARC products for messaging, intelligent assistance, teamwork and mobile assistance.'),
@@ -87,14 +94,19 @@ def apply(root):
             html = html.replace('</head>', '<link rel="preload" href="/assets/fonts/sans.woff2" as="font" type="font/woff2" crossorigin>\n</head>')
         html = re.sub(r'<link rel="stylesheet" href="/mobile.css[^"\n]*">\s*', '', html)
         html = html.replace('</head>', '<link rel="stylesheet" href="/mobile.css?v=responsive-2">\n</head>')
-        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=enquiries-3', html)
-        html = re.sub(r'/guide.js\?v=[^" ]+', '/guide.js?v=responsive-2', html)
+        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=experience-4', html)
+        html = re.sub(r'/guide.js\?v=[^" ]+', '/guide.js?v=experience-4', html)
         # Optimized copies retain the supplied artwork; originals stay available.
         for asset in ['serlow-logo.png', 'zevaris-ai-logo.png', 'decision-sphere-logo.png', 'scaler-profile.webp', 'qixarc-logo.webp', 'logo-nav.webp', 'web.webp']:
             html = html.replace('/assets/' + asset + '"', '/assets/' + Path(asset).stem + '-opt.webp"')
         html = html.replace('<img src="/assets/qixarc-logo-opt.webp" alt="" width="620" height="625">', '<img src="/assets/qixarc-logo-opt.webp" alt="" width="620" height="625" loading="lazy" decoding="async">')
-        for asset in ['style.css', 'pages.css', 'navigation.js', 'comets.js', 'story.js', 'story-timeline.css']:
-            html = re.sub(r'/' + re.escape(asset) + r'(?:\?v=[^\" ]+)?(?=\")', '/' + asset + ('?v=enquiries-3' if asset == 'pages.css' else '?v=responsive-2'), html)
+        for asset in ['style.css', 'pages.css', 'navigation.js', 'comets.js', 'story.js', 'story-timeline.css', 'motion-loader.js']:
+            html = re.sub(r'/' + re.escape(asset) + r'(?:\?v=[^\" ]+)?(?=\")', '/' + asset + '?v=experience-4', html)
+        if route != 'admin':
+            html = re.sub(r'<link rel="stylesheet" href="/experience.css[^"]*">\s*', '', html)
+            html = re.sub(r'<script src="/experience.js[^"]*" defer></script>\s*', '', html)
+            html = html.replace('</head>', '<link rel="stylesheet" href="/experience.css?v=experience-4">\n<script src="/experience.js?v=experience-4" defer></script>\n</head>')
+        html = re.sub(r'<button\b(?=[^>]*\bid="(?:qbit-motion|motion-toggle|story-motion)")[^>]*>.*?</button>', '', html, flags=re.S)
         path.write_text(html, encoding='utf-8')
     entries = []
     for route in pages:

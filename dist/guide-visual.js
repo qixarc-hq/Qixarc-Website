@@ -90,12 +90,11 @@ try {
   function sync() {
     if (frame) cancelAnimationFrame(frame);
     frame = 0;
+    guide.classList.toggle('has-3d', isOpen() && !lost);
     if (allowed()) { last = performance.now(); frame = requestAnimationFrame(animate); }
   }
   launcher.addEventListener('click', sync);
   document.querySelector('#qbit-close').addEventListener('click', sync);
-  document.querySelector('#qbit-motion').addEventListener('click', sync);
-  document.querySelector('#story-motion')?.addEventListener('click', sync);
   guide.addEventListener('keydown', event => { if (event.key === 'Escape') sync(); });
   document.addEventListener('visibilitychange', sync);
   window.addEventListener('qixarc-motion', sync);
