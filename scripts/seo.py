@@ -94,7 +94,7 @@ def apply(root):
             html = html.replace('/assets/' + asset + '"', '/assets/' + Path(asset).stem + '-opt.webp"')
         html = html.replace('<img src="/assets/qixarc-logo-opt.webp" alt="" width="620" height="625">', '<img src="/assets/qixarc-logo-opt.webp" alt="" width="620" height="625" loading="lazy" decoding="async">')
         for asset in ['style.css', 'pages.css', 'navigation.js', 'comets.js', 'story.js', 'story-timeline.css']:
-            html = re.sub(r'/' + re.escape(asset) + r'(?:\?v=[^\" ]+)?(?=\")', '/' + asset + '?v=responsive-2', html)
+            html = re.sub(r'/' + re.escape(asset) + r'(?:\?v=[^\" ]+)?(?=\")', '/' + asset + ('?v=enquiries-3' if asset == 'pages.css' else '?v=responsive-2'), html)
         path.write_text(html, encoding='utf-8')
     entries = []
     for route in pages:

@@ -26,6 +26,6 @@ Vercel uses the same commands from the `dist` root, without fetching CMS content
 - Navigation open/close, Escape/focus restoration and desktop resizing passed.
 - Serlow URL and Decision Sphere status, permissions and capability copy passed.
 - Mobile and reduced-motion sessions did not request Three.js. Eligible desktop sessions loaded showcase and guide visuals on demand; pause controls worked.
-- Contact-form required fields, failure retention and success reset passed with a mocked database client. No real enquiry was submitted; backend delivery was not tested.
+- Contact-form required fields, failure retention and success reset passed with a mocked database client. Live delivery was subsequently verified on 21 October 2026 after restoring the paused Supabase project. The real Contact form, stored record, company-admin access and non-admin isolation passed.
 - Offline generation and SEO checks passed for all nine sitemap routes, including repeatable generation.
 - Local Lighthouse, Chromium 153, compressed production files: performance **94 mobile / 100 desktop**; accessibility, best practices and SEO **100** on both. Mobile LCP 2.6s, total blocking time 0ms, CLS 0. Desktop LCP 0.6s, blocking time 0ms, CLS 0. These are lab results, not production field measurements.

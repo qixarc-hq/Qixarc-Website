@@ -164,3 +164,6 @@ main h1 em,main h2 em,main h2 i,main h3 em{font-style:normal}
 .team-profile:focus-visible{outline:2px solid #354eff;outline-offset:4px}
 @media(max-width:760px){.team-profiles{margin-top:40px;padding-top:30px}.team-profile-grid{grid-template-columns:1fr;gap:14px}.team-profile{padding:25px}.team-profile-index{margin-bottom:25px}.team-profile h3{font-size:38px}}
 @media(prefers-reduced-motion:reduce){.team-profile,.team-profile-link>span{transition:none}.team-profile:hover,.team-profile:focus-visible,.team-profile:hover .team-profile-link>span{transform:none}}
+
+/* Clear feedback on the light Contact page. */
+.contact-detail #form-status:not(:empty){color:#080d36;background:#e7edff;border-color:#bbccff;border-left-color:#2445f5}
