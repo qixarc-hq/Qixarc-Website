@@ -59,6 +59,18 @@ def check():
     assert len(titles)==len(set(titles)),'Duplicate titles'
     assert len(descriptions)==len(set(descriptions)),'Duplicate descriptions'
     assert not broken,broken
+    # Retired URLs must go directly to a real, canonical, indexable page.
+    redirects=json.loads((DIST/'vercel.json').read_text())['redirects']
+    sources=[rule['source'] for rule in redirects]
+    assert len(sources)==len(set(sources)),'Duplicate redirect sources'
+    for rule in redirects:
+        source=rule['source'];destination=rule['destination']
+        assert rule.get('permanent') is True,(source,'Temporary redirect')
+        assert source.startswith('/') and destination.startswith('/')
+        assert destination not in sources,(source,'Redirect chain or loop')
+        assert BASE+destination in urls,(source,'Destination missing from sitemap')
+        assert BASE+source not in urls,(source,'Retired URL remains in sitemap')
+        assert BASE+source.rstrip('/')+'/' not in urls,(source,'Retired canonical remains in sitemap')
     for route in ['admin','pricing','blog/post']:
         assert 'noindex' in HTML((DIST/route/'index.html').read_text(encoding='utf-8')).robots[0]
         assert BASE+'/'+route+'/' not in urls
@@ -82,6 +94,6 @@ def check():
     runpy.run_path(str(ROOT/'scripts/seo.py'))['apply'](DIST)
     after={str(p):p.read_bytes() for p in DIST.rglob('*') if p.is_file()}
     assert before==after,'SEO generation is not idempotent'
-    print(f'PASS: {len(urls)} sitemap URLs, unique metadata, H1s, canonicals, JSON-LD, article HTML, noindex exclusions, safe CMS escaping, repeatable generation.')
+    print(f'PASS: {len(urls)} sitemap URLs, unique metadata, H1s, canonicals, JSON-LD, article HTML, permanent redirects to indexable pages, noindex exclusions, safe CMS escaping, repeatable generation.')
 
 if __name__=='__main__':check()

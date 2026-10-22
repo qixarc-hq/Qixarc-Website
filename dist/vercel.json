@@ -5,6 +5,46 @@
   "trailingSlash": true,
   "redirects": [
     {
+      "source": "/demo",
+      "destination": "/products/",
+      "permanent": true
+    },
+    {
+      "source": "/demo/",
+      "destination": "/products/",
+      "permanent": true
+    },
+    {
+      "source": "/why-qixarc",
+      "destination": "/about/",
+      "permanent": true
+    },
+    {
+      "source": "/why-qixarc/",
+      "destination": "/about/",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/privacy/",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy/",
+      "destination": "/privacy/",
+      "permanent": true
+    },
+    {
+      "source": "/terms-of-service",
+      "destination": "/terms/",
+      "permanent": true
+    },
+    {
+      "source": "/terms-of-service/",
+      "destination": "/terms/",
+      "permanent": true
+    },
+    {
       "source": "/pricing",
       "destination": "/research/",
       "permanent": true
