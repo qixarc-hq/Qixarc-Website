@@ -12,7 +12,7 @@ SERVICES = [
 def service_cards():
     cards = []
     for i, s in enumerate(SERVICES, 1):
-        cards.append(f'''<a class="capability-card interactive-card" href="/services/{s['slug']}/"><div class="capability-art"><img src="/assets/service-{s['image']}.webp" srcset="/assets/service-{s['image']}-540.webp 540w, /assets/service-{s['image']}.webp 900w" sizes="(max-width:760px) calc(100vw - 40px), (max-width:1100px) 45vw, 540px" alt="" width="900" height="600" loading="lazy" decoding="async"><span class="card-open" aria-hidden="true">↗</span></div><div class="capability-copy"><span class="card-index">{i:02d} / CAPABILITY</span><h3>{s['name']}</h3><p>{s['description']}</p><span class="card-action">Explore the service <span aria-hidden="true">↗</span></span></div></a>''')
+        cards.append(f'''<a class="capability-card interactive-card" href="/services/{s['slug']}/"><div class="capability-art"><img src="/assets/service-{s['image']}.webp" srcset="/assets/service-{s['image']}-540.webp 540w, /assets/service-{s['image']}.webp 900w" sizes="(max-width:559px) calc(100vw - 32px), (max-width:1100px) 45vw, 540px" alt="" width="900" height="600" loading="lazy" decoding="async"><span class="card-open" aria-hidden="true">↗</span></div><div class="capability-copy"><span class="card-index">{i:02d} / CAPABILITY</span><h3>{s['name']}</h3><p>{s['description']}</p><span class="card-action">Explore the service <span aria-hidden="true">↗</span></span></div></a>''')
     return '<div class="capability-grid">' + ''.join(cards) + '</div>'
 
 def enhance_home(home):
@@ -76,6 +76,8 @@ def editorial_art(html, route):
         f'sizes="(max-width:760px) calc(100vw - 40px), 42vw" alt="{escape(alt, quote=True)}" '
         'width="900" height="600" loading="lazy" decoding="async">'
         '<figcaption>QIXARC / CONCEPT ILLUSTRATION</figcaption></figure><!-- /page-art -->')
+    if not article:
+        figure = figure.replace('loading="lazy"', 'loading="eager" fetchpriority="high"')
     if article:
         html = html.replace('<div class="cms-article-body">', figure + '<div class="cms-article-body">', 1)
     else:

@@ -10,11 +10,11 @@
   let particles = [];
   const rebuild = () => {
     field.replaceChildren();
-    particles = Array.from({ length: mobile.matches ? 9 : 40 }, (_, index) => {
+    particles = Array.from({ length: mobile.matches ? 3 : 7 }, (_, index) => {
       const element = document.createElement('span');
       element.className = 'intro-comet';
       field.append(element);
-      return { element, active: false, wait: random(40, 500) + index * (mobile.matches ? 110 : 75), time: 0 };
+      return { element, active: false, wait: random(0, 120) + index * (mobile.matches ? 160 : 110), time: 0 };
     });
   };
   const launch = particle => {
@@ -22,15 +22,15 @@
     const radians = angle * Math.PI / 180;
     const distance = random(.5, .95) * Math.hypot(width, height);
     Object.assign(particle, {
-      active: true, time: 0, duration: random(700, 1700),
+      active: true, time: 0, duration: random(380, 700),
       x: random(-.25, .45) * width, y: random(-.2, .4) * height,
       dx: Math.cos(radians) * distance, dy: Math.sin(radians) * distance,
       angle, peak: random(.35, .7)
     });
-    particle.element.style.width = `${random(90, 260)}px`;
+    particle.element.style.width = `${random(mobile.matches ? 45 : 80, mobile.matches ? 110 : 180)}px`;
     particle.element.style.height = `${random(.8, 1.7)}px`;
   };
-  const allowed = () => visible && !document.hidden && !reduced.matches && !document.body.classList.contains('motion-paused');
+  const allowed = () => visible && !document.hidden && !reduced.matches && !navigator.connection?.saveData && !document.body.classList.contains('motion-paused');
   const tick = now => {
     frame = 0;
     if (!allowed()) return;
@@ -46,7 +46,7 @@
       if (particle.time >= 1) {
         particle.active = false;
         particle.element.style.opacity = '0';
-        particle.wait = mobile.matches ? random(800, 2000) : random(220, 1100);
+        particle.wait = mobile.matches ? random(80, 260) : random(100, 500);
         continue;
       }
       const progress = 1 - (1 - particle.time) ** 2;

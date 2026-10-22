@@ -95,21 +95,29 @@ def apply(root):
             html = html.replace('</head>', '<link rel="preload" href="/assets/fonts/sans.woff2" as="font" type="font/woff2" crossorigin>\n</head>')
         html = re.sub(r'<link rel="stylesheet" href="/mobile.css[^"\n]*">\s*', '', html)
         html = html.replace('</head>', '<link rel="stylesheet" href="/mobile.css?v=responsive-2">\n</head>')
-        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=orbital-6', html)
-        html = re.sub(r'/guide.js\?v=[^" ]+', '/guide.js?v=orbital-6', html)
+        html = re.sub(r'/app.js\?v=[^" ]+', '/app.js?v=mobile-9', html)
+        html = re.sub(r'/guide.js\?v=[^" ]+', '/guide.js?v=mobile-9', html)
         # Optimized copies retain the supplied artwork; originals stay available.
         for asset in ['serlow-logo.png', 'zevaris-ai-logo.png', 'decision-sphere-logo.png', 'scaler-profile.webp', 'qixarc-logo.webp', 'logo-nav.webp', 'web.webp']:
             html = html.replace('/assets/' + asset + '"', '/assets/' + Path(asset).stem + '-opt.webp"')
         html = html.replace('<img src="/assets/qixarc-logo-opt.webp" alt="" width="620" height="625">', '<img src="/assets/qixarc-logo-opt.webp" alt="" width="620" height="625" loading="lazy" decoding="async">')
         for asset in ['style.css', 'pages.css', 'navigation.js', 'comets.js', 'story.js', 'story-timeline.css', 'motion-loader.js']:
-            html = re.sub(r'/' + re.escape(asset) + r'(?:\?v=[^\" ]+)?(?=\")', '/' + asset + '?v=orbital-6', html)
+            html = re.sub(r'/' + re.escape(asset) + r'(?:\?v=[^\" ]+)?(?=\")', '/' + asset + '?v=mobile-9', html)
         if route != 'admin':
             html = re.sub(r'<link rel="stylesheet" href="/experience.css[^"]*">\s*', '', html)
             html = re.sub(r'<script src="/experience.js[^"]*" defer></script>\s*', '', html)
-            html = html.replace('</head>', '<link rel="stylesheet" href="/experience.css?v=orbital-6">\n<script src="/experience.js?v=orbital-6" defer></script>\n</head>')
+            html = html.replace('</head>', '<link rel="stylesheet" href="/experience.css?v=mobile-9">\n<script src="/experience.js?v=mobile-9" defer></script>\n</head>')
         html = re.sub(r'<button\b(?=[^>]*\bid="(?:qbit-motion|motion-toggle|story-motion)")[^>]*>.*?</button>', '', html, flags=re.S)
         if route != 'admin':
             html = runpy.run_path(str(Path(__file__).with_name('experience-content.py')))['editorial_art'](html, route)
+        if route != 'admin':
+            html = re.sub(r'\s*<script src="/intro.js[^\"]*"></script>\s*', '', html)
+            html = html.replace('<body>', '<body>\n<script src="/intro.js?v=mobile-9"></script>', 1)
+            html = re.sub(r'<link rel="stylesheet" href="/responsive.css[^\"]*">\s*', '', html)
+            html = html.replace('</head>', '<link rel="stylesheet" href="/responsive.css?v=mobile-9">\n</head>')
+            if 'rel="preload" href="/assets/qixarc-logo-opt.webp"' not in html:
+                html = html.replace('</head>', '<link rel="preload" href="/assets/qixarc-logo-opt.webp" as="image">\n</head>')
+            html = html.replace('src="/assets/web-opt.webp" alt="" fetchpriority="high"', 'src="/assets/web-opt.webp" alt="" width="171" height="256" fetchpriority="high" decoding="async"')
         path.write_text(html, encoding='utf-8')
     entries = []
     for route in pages:

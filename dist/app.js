@@ -17,8 +17,10 @@
     links.classList.toggle('open', open);
     document.body.classList.toggle('nav-open', open);
     menuBackground.forEach(element => { element.inert = open; });
-    if (open) links.querySelector('a').focus();
+    if (open) (links.querySelector('[aria-current]') || links.querySelector('a')).focus({preventScroll:true});
   });
+  document.querySelector('.wordmark')?.addEventListener('click', closeMenu);
+  links.addEventListener('click', event => { if (event.target === links) { closeMenu(); menu.focus(); } });
   links.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
   document.addEventListener('keydown', event => {
     if (event.key === 'Tab' && links.classList.contains('open')) {
@@ -89,7 +91,7 @@
     });
   }
   // Animate individual hero lines without changing the layout or hiding content if JS fails.
-  if (!reducedMotion.matches && 'animate' in Element.prototype) {
+  if (!document.querySelector('.site-loader') && !reducedMotion.matches && 'animate' in Element.prototype) {
     const entranceSteps = [
       ['.hero-eyebrow', 0, 8],
       ['.hero-bottom', 60, 10],

@@ -10,69 +10,24 @@
     label.replaceChildren(number, text);
   });
 
-  let introSeen = false;
-  try { introSeen = sessionStorage.getItem('qixarc-intro-v3') === 'seen'; } catch {}
-  if (!introSeen && !reduced.matches) {
-    const loader = document.createElement('div');
-    loader.className = 'site-loader';
-    loader.innerHTML = `<div class="orbital-light" aria-hidden="true"></div>
-      <div class="loader-float float-build" aria-hidden="true"><b>⌘</b><span>Building<br><strong>something great.</strong></span><i></i></div>
-      <div class="loader-float float-innovation" aria-hidden="true"><b>✦</b><span>Innovation<br><strong>in progress</strong></span></div>
-      <div class="loader-float float-impact" aria-hidden="true"><b>↗</b><span>Next stop:<br><strong>greater impact</strong></span></div>
-      <div class="loader-content"><div class="loader-universe" aria-hidden="true"><div class="loader-orbits"><i class="orbital-ring ring-one"><b></b></i><i class="orbital-ring ring-two"><b></b></i><i class="orbital-ring ring-three"><b></b></i></div><img class="loader-logo" src="/assets/qixarc-logo-opt.webp" alt="" width="200" height="202"></div>
-      <p class="loader-title">Loading your experience to <strong>QIXARC</strong></p>
-      <div class="loader-progress"><div class="loader-track" role="progressbar" aria-label="QIXARC introduction" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i class="loader-fill"></i></div><span class="loader-percent" aria-hidden="true">0%</span></div>
-      <p class="loader-caption">Crafted with passion, refined in pixels</p></div><span class="loader-signature" aria-hidden="true">QIXARC<br>IDEAS IN MOTION</span>`;
-    document.body.append(loader);
-    const started = performance.now();
-    let finished = false, frame = 0;
-    const fill = loader.querySelector('.loader-fill');
-    const track = loader.querySelector('.loader-track');
-    const percent = loader.querySelector('.loader-percent');
-    let previous = -1;
-    const update = value => {
-      if (value === previous) return;
-      previous = value;
-      fill.style.transform = `scaleX(${value / 100})`;
-      track.setAttribute('aria-valuenow', String(value));
-      percent.textContent = `${value}%`;
-    };
-    const finish = () => {
-      if (finished) return;
-      finished = true; cancelAnimationFrame(frame); clearTimeout(fallback);
-      document.removeEventListener('keydown', finish);
-      reduced.removeEventListener('change', finish);
-      try { sessionStorage.setItem('qixarc-intro-v3', 'seen'); } catch {}
-      update(100);
-      const exit = animate(loader, [{ opacity: 1 }, { opacity: 0 }], { duration: 220 });
-      if (exit) exit.finished.catch(() => {}).finally(() => loader.remove()); else loader.remove();
-    };
-    const tick = now => {
-      const elapsed = now - started;
-      update(Math.min(100, Math.floor(elapsed / 2000 * 100)));
-      if (elapsed >= 2000) finish(); else frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    const fallback = setTimeout(finish, 2500);
-    reduced.addEventListener('change', finish, { once: true });
-    document.addEventListener('keydown', finish, { once: true });
-    const universe = loader.querySelector('.loader-universe');
-    let pointerFrame = 0;
-    loader.addEventListener('pointermove', event => {
-      if (pointerFrame || event.pointerType !== 'mouse') return;
-      const x = (event.clientX / innerWidth - .5) * 16;
-      const y = (event.clientY / innerHeight - .5) * 12;
-      pointerFrame = requestAnimationFrame(() => {
-        pointerFrame = 0;
-        if (!finished) universe.style.transform = `translate(${x}px, ${y}px)`;
-      });
-    }, { passive: true });
-    loader.addEventListener('pointerdown', () => animate(universe, [
-      { scale: '1' }, { scale: '1.08', offset: .4 }, { scale: '1' }
-    ], { duration: 400 }));
-  }
-
   const hover = matchMedia('(hover: hover) and (pointer: fine)');
+  // A bounded pool avoids allocating a new node for every pointer event.
+  const trail = document.createElement('div'); trail.className = 'cursor-stars'; trail.setAttribute('aria-hidden', 'true');
+  const sparks = Array.from({length: 8}, () => { const star = document.createElement('i'); trail.append(star); return star; });
+  document.body.append(trail);
+  let lastSpark = 0, lastX = 0, lastY = 0, sparkIndex = 0;
+  const clearTrail = () => sparks.forEach(star => star.getAnimations().forEach(motion => motion.cancel()));
+  document.addEventListener('pointermove', event => {
+    if (event.pointerType !== 'mouse' || !hover.matches || reduced.matches || document.hidden || navigator.connection?.saveData || document.body.classList.contains('nav-open') || event.target.closest('input,textarea,select')) return;
+    const now = performance.now();
+    if (now - lastSpark < 70 || Math.hypot(event.clientX-lastX,event.clientY-lastY) < 12) return;
+    lastSpark = now; lastX = event.clientX; lastY = event.clientY;
+    const star = sparks[sparkIndex++ % sparks.length];
+    star.getAnimations().forEach(motion => motion.cancel());
+    star.style.left = `${event.clientX}px`; star.style.top = `${event.clientY}px`;
+    star.animate([{opacity:.7, transform:'translate(-50%,-50%) scale(.8) rotate(0deg)'}, {opacity:0, transform:'translate(-50%,14px) scale(.15) rotate(50deg)'}], {duration:420,easing:'ease-out'});
+  }, {passive:true});
+  reduced.addEventListener('change', clearTrail); hover.addEventListener('change', clearTrail); document.addEventListener('visibilitychange', clearTrail);
   const cards = document.querySelectorAll('.interactive-card,.home-product-card,.team-profile,.detail-card,.cms-card,.catalogue-product,.journal-card');
   cards.forEach(card => {
     card.classList.add('motion-card');
@@ -121,9 +76,9 @@
     };
     const motion = logo && animate(logo, [
       { transform: 'translateX(0) rotate(0) scale(1)' },
-      { transform: 'translateX(-18px) rotate(-24deg) scale(.86)', offset: .45 },
+      { transform: 'translateX(-3px) scale(.97)', offset: .45 },
       { transform: 'translateX(0) rotate(0) scale(1)' }
-    ], { duration: 360 });
+    ], { duration: 180 });
     if (motion) motion.finished.then(goHome).catch(goHome); else goHome();
   }));
 
@@ -177,7 +132,7 @@
       const details = entry.target;
       observer.unobserve(details);
       if (!details.open && !details.dataset.userControlled) details.qixarcOpen(true);
-    }), { threshold: .65, rootMargin: '-15% 0px -20% 0px' });
+    }), { threshold: .4, rootMargin: '0px 0px -10% 0px' });
     observer.observe(faqs[0]);
   }
 })();
