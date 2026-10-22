@@ -73,3 +73,9 @@ Build and SEO checks pass for 16 sitemap routes. All 16 public pages pass asset/
 - Added a restrictive script/content policy, anti-framing, MIME sniffing protection, permission restrictions, and no-store/noindex headers for admin routes.
 - Validation: browser bounds checks passed at 240, 280, 320, 360, 390, 430, 768, 1024 and 1440 px for the hero CTA, security controls and sign-in form. Simulated-account UI checks verified other-session sign-out preserves the current dashboard and inactivity clears it. Password helper tests cover validation, expired/non-admin sessions, current-password failure, revoked membership, failed updates and sign-out scopes. No live account password was changed.
 - Read-only production API checks confirmed anonymous users cannot read enquiries or admin records, cannot see drafts, and can still read published content. Database audit confirmed RLS and restricted column grants. Supabase's remaining security advisory is disabled leaked-password protection; see SECURITY.md for the configuration follow-up and session limitations.
+
+## Mobile showcase logo fit — 22 October 2026
+
+The existing logo artwork now sits in a proportional, contained area below the showcase copy on phones, with a 360 px maximum width and space above the footer. The rule also covers coarse-pointer screens through 1100 px for touch landscape/tablet layouts. Mobile hover/tap feedback uses a small transform with a 500 ms eased transition; reduced motion skips it. Desktop artwork, type, 3D rendering and settings are unchanged.
+
+Browser checks verified the complete logo stays clear of the text and footer without horizontal overflow at 240, 280, 320, 360, 390, 430, 560, 640 and 760 px frame widths. Computed showcase styles matched the pre-change desktop baseline at 768, 1024, 1280 and 1440 px. Hover reached the expected 0.98 scale / −3 px translation. These are browser viewport checks, not physical-device tests.

@@ -114,7 +114,7 @@ def apply(root):
             html = re.sub(r'\s*<script src="/intro.js[^\"]*"></script>\s*', '', html)
             html = html.replace('<body>', '<body>\n<script src="/intro.js?v=mobile-9"></script>', 1)
             html = re.sub(r'<link rel="stylesheet" href="/responsive.css[^\"]*">\s*', '', html)
-            html = html.replace('</head>', '<link rel="stylesheet" href="/responsive.css?v=mobile-9">\n</head>')
+            html = html.replace('</head>', '<link rel="stylesheet" href="/responsive.css?v=mobile-logo-1">\n</head>')
             if 'rel="preload" href="/assets/qixarc-logo-opt.webp"' not in html:
                 html = html.replace('</head>', '<link rel="preload" href="/assets/qixarc-logo-opt.webp" as="image">\n</head>')
             html = html.replace('src="/assets/web-opt.webp" alt="" fetchpriority="high"', 'src="/assets/web-opt.webp" alt="" width="171" height="256" fetchpriority="high" decoding="async"')
