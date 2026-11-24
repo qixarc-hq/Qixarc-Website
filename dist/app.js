@@ -195,13 +195,13 @@
   const status = document.querySelector('#form-status');
   const copy = document.querySelector('#copy-enquiry');
   const setFormStatus = message => {
-    const fragments = message.split('qixarc@gmail.com');
+    const fragments = message.split('help@qixarc.com');
     status.replaceChildren();
     fragments.forEach((fragment, index) => {
       if (index) {
         const email = document.createElement('a');
-        email.href = 'mailto:qixarc@gmail.com';
-        email.textContent = 'qixarc@gmail.com';
+        email.href = 'mailto:help@qixarc.com';
+        email.textContent = 'help@qixarc.com';
         email.style.textDecoration = 'underline';
         status.append(email);
       }
@@ -251,7 +251,7 @@
     if (!form.reportValidity()) return;
     const data = new FormData(form);
     if (data.get('company_website')) { setFormStatus('Unable to submit this enquiry.'); return; }
-    if (!window.qixarcDB) { setFormStatus('Connection unavailable. Please retry or email qixarc@gmail.com.'); return; }
+    if (!window.qixarcDB) { setFormStatus('Connection unavailable. Please retry or email help@qixarc.com.'); return; }
     const payload = {
       name: String(data.get('name')), email: String(data.get('email')),
       service: String(data.get('service') || 'A new digital project'), message: String(data.get('message'))
@@ -275,8 +275,8 @@
       setFormStatus('Thank you. Your enquiry has been received by QIXARC.');
     } catch {
       setFormStatus(controller.signal.aborted
-        ? 'The connection took too long. Your enquiry could not be confirmed. Please retry or email qixarc@gmail.com. Your details are still in the form.'
-        : 'Your enquiry could not be confirmed. Please retry or email qixarc@gmail.com. Your details are still in the form.');
+        ? 'The connection took too long. Your enquiry could not be confirmed. Please retry or email help@qixarc.com. Your details are still in the form.'
+        : 'Your enquiry could not be confirmed. Please retry or email help@qixarc.com. Your details are still in the form.');
     } finally {
       clearTimeout(timeout);
       fields.forEach(field => { field.disabled = false; });
