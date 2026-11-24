@@ -17,11 +17,11 @@
 - [About Our Team](https://www.qixarc.com/about/): Meet QIXARC in Madurai and our leadership: Kabibalan, Founder; Sri, Co-founder; and Giri, Managing Director. Explore their portfolios.
 - [Research & Development](https://www.qixarc.com/research/): Explore QIXARC’s research into human-guided AI, interfaces in motion and connected workflows, with updates from our R&D desk.
 - [Design & Technology Blog](https://www.qixarc.com/blog/): Read QIXARC’s design and technology journal: ideas about useful interfaces, purposeful animation and digital product development.
-- [Contact QIXARC](https://www.qixarc.com/contact/): Contact QIXARC in Madurai about websites, UI/UX design and digital products. Send a project enquiry or email qixarc@gmail.com.
+- [Contact QIXARC](https://www.qixarc.com/contact/): Contact QIXARC in Madurai about websites, UI/UX design and digital products. Send a project enquiry or email help@qixarc.com.
 - [Motion should have a purpose](https://www.qixarc.com/blog/motion-with-purpose/): A QIXARC design note on page transitions, feedback and making room for people who prefer less movement.
 
 ## Contact
-- Email: qixarc@gmail.com
+- Email: help@qixarc.com
 - Phone: +91 83007 15081
 
 ## Product status
