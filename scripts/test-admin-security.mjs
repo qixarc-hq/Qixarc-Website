@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const window={};vm.runInNewContext(fs.readFileSync(new URL('../dist/admin/security.js',import.meta.url),'utf8'),{window});
 const security=window.QixarcSecurity;
-const values={currentPassword:'fixture-current-123',newPassword:'fixture-new-passphrase-456',confirmation:'fixture-new-passphrase-456'};
+const values={currentPassword:'fixture-current-123',newPassword:'Qx8-test',confirmation:'Qx8-test'};
 function authStub(options={}){
  const calls=[];const user={id:'test-admin-id',email:'admin@example.test'};
  return {calls,auth:{
@@ -14,8 +14,9 @@ function authStub(options={}){
  }};
 }
 let x=authStub();await assert.rejects(security.changePassword(x.auth,{...values,confirmation:'mismatch'},()=>true,()=>{}),/do not match/);assert.deepEqual(x.calls,[]);
-assert.match(security.passwordError({...values,newPassword:'short'}),/12 and 128/);
-assert.match(security.passwordError({...values,newPassword:'x'.repeat(129)}),/12 and 128/);
+assert.match(security.passwordError({...values,newPassword:'seven!!'}),/8 and 128/);
+assert.equal(security.passwordError(values),'');
+assert.match(security.passwordError({...values,newPassword:'x'.repeat(129)}),/8 and 128/);
 assert.match(security.passwordError({...values,newPassword:values.currentPassword,confirmation:values.currentPassword}),/different password/);
 x=authStub({expired:true});await assert.rejects(security.changePassword(x.auth,values,()=>true,()=>{}),/session has ended/);assert.deepEqual(x.calls,['getUser']);
 x=authStub();await assert.rejects(security.changePassword(x.auth,values,()=>false,()=>{}),/session has ended/);assert.deepEqual(x.calls,['getUser']);

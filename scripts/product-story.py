@@ -67,16 +67,25 @@ def product_page(hero, cta):
 def team_profiles():
     cards = []
     for person in defaults['team']:
-        name, role, url, photo = (escape(person[key]) for key in ('name', 'role', 'portfolio', 'photo'))
+        slug, name, role, url, photo = (escape(person[key]) for key in ('id', 'name', 'role', 'portfolio', 'photo'))
         portrait = (f'<img src="{photo}" alt="" loading="lazy" decoding="async">' if photo
                     else f'<span class="team-initials" aria-hidden="true">{name[0]}</span>')
+        link = f'<a href="{url}" target="_blank" rel="noopener noreferrer" data-team-portfolio aria-label="Open {name}’s portfolio in a new tab">'
         cards.append(f'''<article class="team-profile">
-          <h3>{name}</h3><p>{role}</p>
-          <details class="team-profile-details">
-            <summary>View portfolio <span aria-hidden="true">↗</span></summary>
-            <div class="team-preview">{portrait}<a href="{url}" target="_blank" rel="noopener noreferrer"
-              aria-label="Open {name}’s portfolio in a new tab">Open portfolio ↗</a></div>
-          </details>
+          <div class="team-profile-turn">
+            <div class="team-profile-front">
+              <h3>{name}</h3><p>{role}</p>
+              <button class="team-flip-trigger" type="button" aria-expanded="false" aria-controls="team-photo-{slug}" aria-label="Show {name}’s portrait" hidden>View portfolio <span aria-hidden="true">↻</span></button>
+              {link}View portfolio ↗</a>
+            </div>
+            <div class="team-profile-back" id="team-photo-{slug}" hidden inert>
+              <div class="team-profile-portrait">{portrait}</div>
+              <div class="team-profile-actions">
+                <button type="button" aria-label="Show {name}’s details">← Back</button>
+                {link}Open portfolio ↗</a>
+              </div>
+            </div>
+          </div>
         </article>''')
     return '<div class="team-profiles" id="team"><div class="section-label">THE PEOPLE / OUR LEADERSHIP</div><h2>Meet the team.</h2><div class="team-profile-grid" data-team-grid>' + ''.join(cards) + '</div></div>'
 

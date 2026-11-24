@@ -153,17 +153,7 @@ main h1 em,main h2 em,main h2 i,main h3 em{font-style:normal}
 .team-profiles{margin-top:65px;padding-top:40px;border-top:1px solid var(--line)}
 .team-profiles>h2{font-size:clamp(38px,5vw,64px);margin:20px 0 30px}
 .team-profile-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
-.team-profile{display:flex;flex-direction:column;align-items:flex-start;padding:30px;border:1px solid #ccd5f0;border-radius:20px;background:linear-gradient(145deg,#ffffffa6,#e7eaff85);transition:transform .25s ease,opacity .25s ease}
-.team-profile-index{font:10px QixMono,monospace;letter-spacing:.08em;color:#5c6c95;margin-bottom:40px}
-.team-profile h3{font-size:clamp(30px,3.4vw,46px);margin:0 0 9px;line-height:1.1}
-.team-profile p{font-size:14px;color:#566384;margin:0 0 32px}
-.team-profile-link{display:flex;justify-content:space-between;width:100%;gap:15px;margin-top:auto;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:#293de2}
-.team-profile-link>span{transition:transform .25s ease,opacity .25s ease}
-.team-profile:hover,.team-profile:focus-visible{transform:translateY(-6px);border-color:#879bff;box-shadow:0 15px 35px #354eff12}
-.team-profile:hover .team-profile-link>span{transform:translate(3px,-3px)}
-.team-profile:focus-visible{outline:2px solid #354eff;outline-offset:4px}
-@media(max-width:760px){.team-profiles{margin-top:40px;padding-top:30px}.team-profile-grid{grid-template-columns:1fr;gap:14px}.team-profile{padding:25px}.team-profile-index{margin-bottom:25px}.team-profile h3{font-size:38px}}
-@media(prefers-reduced-motion:reduce){.team-profile,.team-profile-link>span{transition:none}.team-profile:hover,.team-profile:focus-visible,.team-profile:hover .team-profile-link>span{transform:none}}
+@media(max-width:760px){.team-profiles{margin-top:40px;padding-top:30px}.team-profile-grid{grid-template-columns:1fr;gap:14px}}
 
 /* Clear feedback on the light Contact page. */
 .contact-detail #form-status:not(:empty){color:#080d36;background:#e7edff;border-color:#bbccff;border-left-color:#2445f5}

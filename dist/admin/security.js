@@ -1,7 +1,7 @@
 (() => {
   const passwordError = ({currentPassword, newPassword, confirmation}) => {
     if (!currentPassword) return 'Enter your current password.';
-    if (newPassword.length < 12 || newPassword.length > 128) return 'Use a new password between 12 and 128 characters.';
+    if (newPassword.length < 8 || newPassword.length > 128) return 'Use a new password between 8 and 128 characters.';
     if (newPassword !== confirmation) return 'The new passwords do not match.';
     if (newPassword === currentPassword) return 'Choose a different password from your current one.';
     return '';

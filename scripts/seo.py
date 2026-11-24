@@ -122,9 +122,9 @@ def apply(root):
         if route != 'admin':
             html = re.sub(r'<link rel="stylesheet" href="/launch-team.css[^"]*">\s*|<script src="/(?:company-settings|launch-team).js[^"]*" defer></script>\s*', '', html)
         if route in ('', 'about', 'contact', 'products'):
-            html = html.replace('</head>', '<link rel="stylesheet" href="/launch-team.css?v=1">\n</head>')
+            html = html.replace('</head>', '<link rel="stylesheet" href="/launch-team.css?v=2">\n</head>')
         if route in ('', 'about', 'products'):
-            html = html.replace('</head>', '<script src="/company-settings.js?v=1" defer></script>\n<script src="/launch-team.js?v=1" defer></script>\n</head>')
+            html = html.replace('</head>', '<script src="/company-settings.js?v=1" defer></script>\n<script src="/launch-team.js?v=2" defer></script>\n</head>')
         path.write_text(html, encoding='utf-8')
     entries = []
     for route in pages:

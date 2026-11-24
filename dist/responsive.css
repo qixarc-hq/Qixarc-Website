@@ -49,8 +49,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #24
  .hero-bottom>div>.button:hover{transform:translateY(-2px)}
  .hero-bottom{padding-bottom:0}
  .about-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
- .team-profile-grid{gap:16px}.team-profile{padding:20px}
- #main .team-profile h3{font-size:26px}
+ .team-profile-grid{gap:16px}
+
  .faq{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:32px}
  #main .faq h2{font-size:44px}
 }
@@ -83,7 +83,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #24
  .card-action{min-height:44px;line-height:1.5}
  .capability-art>.card-open{width:40px;height:40px;right:14px;bottom:14px}
  .process-grid{gap:26px 20px}.process-grid h3{font-size:24px;line-height:1.25}
- .team-profile-grid{gap:16px}.team-profile{padding:24px}
+ .team-profile-grid{gap:16px}
  .about .studio-card{padding:16px!important}.about .studio-caption{gap:10px}
  .stats strong{font-size:clamp(34px,11vw,58px)}.stats span{font-size:12px}
  .showcase{min-height:540px;margin-inline:8px}.showcase .sculpture{inset:240px 0 50px}
