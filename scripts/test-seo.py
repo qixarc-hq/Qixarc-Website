@@ -42,6 +42,9 @@ def check():
         path=DIST/urlsplit(url).path.strip('/')/'index.html'
         assert path.exists(),url
         text=path.read_text(encoding='utf-8');page=HTML(text)
+        has_team_cards = urlsplit(url).path in ('/', '/about/')
+        for asset in ('team-cards.css', 'team-cards.js'):
+            assert text.count(f'="/{asset}?') == int(has_team_cards), (url, asset)
         assert page.h1==1,(url,'H1 count',page.h1)
         assert page.canonical==[url],(url,'canonical',page.canonical)
         assert len(page.desc)==1 and page.desc[0],(url,'description')

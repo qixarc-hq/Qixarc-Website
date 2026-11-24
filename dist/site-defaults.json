@@ -6,6 +6,6 @@
   "team": [
     {"id":"kabibalan","name":"Kabibalan","role":"Founder","portfolio":"https://kabibalan.vercel.app/","photo":"/assets/kabibalan-portrait.webp"},
     {"id":"sri","name":"Sri","role":"Co-founder","portfolio":"https://srisaanth.vercel.app/","photo":"/assets/sri-portrait.webp"},
-    {"id":"giri","name":"Giri","role":"Managing Director","portfolio":"https://girimanigandan-vert.vercel.app/","photo":"/assets/kabibalan-portrait.webp"}
+    {"id":"giri","name":"Giri","role":"Managing Director","portfolio":"https://girimanigandan-vert.vercel.app/","photo":"/assets/giri-portrait.webp"}
   ]
 }

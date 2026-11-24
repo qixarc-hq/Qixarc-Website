@@ -2,6 +2,7 @@
 from html import escape
 import json
 from pathlib import Path
+from urllib.parse import urlsplit
 
 defaults = json.loads((Path(__file__).resolve().parents[1] / 'dist/site-defaults.json').read_text(encoding='utf-8'))
 SCALER_SITE = 'https://www.scalerprofile.com/'
@@ -67,16 +68,32 @@ def product_page(hero, cta):
 def team_profiles():
     cards = []
     for person in defaults['team']:
-        name, role, url, photo = (escape(person[key]) for key in ('name', 'role', 'portfolio', 'photo'))
-        portrait = (f'<img src="{photo}" alt="" loading="lazy" decoding="async">' if photo
-                    else f'<span class="team-initials" aria-hidden="true">{name[0]}</span>')
-        cards.append(f'''<article class="team-profile">
-          <h3>{name}</h3><p>{role}</p>
-          <details class="team-profile-details">
-            <summary>View portfolio <span aria-hidden="true">↗</span></summary>
-            <div class="team-preview">{portrait}<a href="{url}" target="_blank" rel="noopener noreferrer"
-              aria-label="Open {name}’s portfolio in a new tab">Open portfolio ↗</a></div>
-          </details>
+        member_id, name, role, url, photo = (escape(person[key]) for key in ('id', 'name', 'role', 'portfolio', 'photo'))
+        link = urlsplit(person['portfolio'].strip())
+        usable = link.scheme in ('http', 'https') and bool(link.hostname) and not (link.username or link.password)
+        href = f' href="{url}"' if usable else ''
+        link_attrs = f'{href} target="_blank" rel="noopener noreferrer" aria-label="Open {name}’s portfolio in a new tab"'
+        photo_src = f' src="{photo}"' if photo else ' hidden'
+        initials = ''.join(part[0] for part in person['name'].split()[:2]).upper()
+        placeholder_hidden = ' hidden' if photo else ''
+        cards.append(f'''<article class="team-profile" data-team-id="{member_id}">
+          <button class="team-card-toggle" type="button" aria-label="Flip card for {name}" aria-pressed="false" hidden></button>
+          <div class="team-card-tilt"><div class="team-card-lift"><div class="team-card-rotor">
+            <div class="team-card-face team-card-front" aria-hidden="false">
+              <h3 data-team-name>{name}</h3><p data-team-role>{role}</p>
+              <a class="team-profile-link" data-team-front-link{link_attrs}>View portfolio <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="team-card-face team-card-back" aria-hidden="true" inert>
+              <div class="team-card-portrait">
+                <span class="team-card-initials" aria-hidden="true"{placeholder_hidden}>{escape(initials)}</span>
+                <img data-team-photo{photo_src} width="576" height="720" alt="" loading="lazy" decoding="async">
+              </div>
+              <div class="team-card-caption">
+                <div><span data-team-name>{name}</span><span data-team-role>{role}</span></div>
+                <a data-team-portfolio{link_attrs} tabindex="-1">Open portfolio <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+          </div></div></div>
         </article>''')
     return '<div class="team-profiles" id="team"><div class="section-label">THE PEOPLE / OUR LEADERSHIP</div><h2>Meet the team.</h2><div class="team-profile-grid" data-team-grid>' + ''.join(cards) + '</div></div>'
 

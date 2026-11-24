@@ -5,6 +5,10 @@
   const list = document.querySelector('#admin-list');
   const editor = document.querySelector('#editor');
   const form = document.querySelector('#content-form');
+  const conflictPanel = document.querySelector('#content-conflict');
+  const latestContent = document.querySelector('#latest-content');
+  const acceptVersion = document.querySelector('#accept-content-version');
+  let contentBase = null, newerContent = null, contentSaving = false;
   const passwordForm = document.querySelector('#password-form');
   const security = window.QixarcSecurity;
   const idleLimit = 15 * 60 * 1000;
@@ -20,7 +24,7 @@
   function lock() {
     companyEditor.reset();
     verified = false; generation++; authGeneration++; clearTimeout(idleTimer);
-    dashboard.hidden = true; list.replaceChildren(); editor.hidden = true; form.reset();
+    dashboard.hidden = true; list.replaceChildren(); closeContentEditor();
     passwordForm.reset();
     document.querySelector('#password-status').textContent = '';
     document.querySelector('#session-status').textContent = '';
@@ -30,13 +34,23 @@
     document.querySelector('#login-panel').hidden = false;
     document.querySelector('#logout').hidden = true;
   }
-  async function authorize() {
+  function connectionFailure(error, status = error?.status) {
+    return error && (error.name === 'AuthRetryableFetchError' || error.code === '' || status === 0 || status >= 500);
+  }
+
+  async function authorize({ preserveOnConnectionError = false } = {}) {
     const ticket = ++authGeneration;
     const { data, error } = await db.auth.getUser();
     if (ticket !== authGeneration) return false;
-    if (error || !data.user) { lock(); return false; }
+    if (preserveOnConnectionError && connectionFailure(error)) {
+      throw new Error('Could not verify your session. Your edits are still here. Please retry.');
+    }
+    if (error || !data?.user) { lock(); return false; }
     const result = await db.from('qixarc_admins').select('user_id').eq('user_id', data.user.id).maybeSingle();
     if (ticket !== authGeneration) return false;
+    if (preserveOnConnectionError && connectionFailure(result.error, result.status)) {
+      throw new Error('Could not verify your admin access. Your edits are still here. Please retry.');
+    }
     if (result.error || !result.data) { lock(); say('This account does not have admin access.'); return false; }
     if (lastActivity && Date.now() - lastActivity >= idleLimit) {
       await endSession('local', 'Session locked after 15 minutes of inactivity. Sign in again.');
@@ -83,10 +97,26 @@
   window.addEventListener('pageshow', event => {
     if (event.persisted) authorize().then(ok => { if (ok && current !== 'security') load(); }).catch(() => { lock(); say('Please sign in again.'); });
   });
-  function openEditor(row = {}) {
-    if (!verified || current === 'security' || current === 'enquiries') return;
+  function clearContentConflict() {
+    newerContent = null;
+    conflictPanel.hidden = true;
+    latestContent.textContent = '';
+    conflictPanel.querySelector('details').open = false;
+  }
+
+  function closeContentEditor() {
+    contentBase = null;
+    editor.hidden = true;
     form.reset();
     delete form.elements.slug.dataset.edited;
+    clearContentConflict();
+  }
+
+  function openEditor(row = {}) {
+    if (!verified || contentSaving || !['blog', 'research'].includes(current)) return;
+    closeContentEditor();
+    contentBase = { kind: current, id: row.id || '', updatedAt: row.updated_at };
+
     for (const key of ['id','title','slug','summary','body','status']) form.elements[key].value = row[key] || (key === 'status' ? 'draft' : '');
     document.querySelector('#editor-title').textContent = row.id ? 'Edit entry' : `New ${current === 'blog' ? 'blog post' : 'R&D update'}`;
     editor.hidden = false; form.elements.title.focus();
@@ -162,9 +192,11 @@
     await endSession('local', 'Signed out of this session.');
   });
   document.querySelectorAll('[data-tab]').forEach(button => button.addEventListener('click', () => {
-    if (!verified || passwordForm.querySelector('button').disabled) return;
-    if (!editor.hidden && !confirm('Discard unsaved editor changes?')) return;
-    current = button.dataset.tab; editor.hidden = true;
+    if (!verified || contentSaving || companyEditor.isSaving() || passwordForm.querySelector('button').disabled) return;
+    if (button.dataset.tab === current) return;
+    if ((!editor.hidden || (current === 'company' && companyEditor.hasDraft())) &&
+        !confirm('Discard unsaved editor changes?')) return;
+    current = button.dataset.tab; closeContentEditor();
     generation++; passwordForm.reset();
     const account = current === 'security';
     const company = current === 'company';
@@ -180,29 +212,87 @@
     document.querySelector('#new-content').hidden = account || company || current === 'enquiries';
     if (!account) load();
   }));
-  document.querySelector('#refresh').addEventListener('click', () => load());
+  async function checkContentVersion(base) {
+    if (!base?.id || contentBase !== base || !verified) return;
+    try {
+      const { data, error } = await db.from('qixarc_content').select('title,slug,summary,body,status,updated_at')
+        .eq('id', base.id).eq('kind', base.kind).maybeSingle();
+      if (!verified || contentBase !== base) return;
+      if (error) throw error;
+      if (!data) {
+        newerContent = null;
+        conflictPanel.hidden = true;
+        say('This entry is no longer available. Your edits are still here.');
+      } else if (data.updated_at !== base.updatedAt) {
+        newerContent = data;
+        latestContent.textContent = [data.title, data.slug + ' · ' + data.status, data.summary, data.body].join('\n\n');
+        conflictPanel.hidden = false;
+        say('This entry changed after you opened it. Review the saved version before retrying.');
+      }
+    } catch {
+      if (contentBase === base) say('Could not check the saved version. Your edits are still here.');
+    }
+  }
+
+  document.querySelector('#refresh').addEventListener('click', async () => {
+    if (contentSaving) return;
+    const base = contentBase;
+    await load();
+    await checkContentVersion(base);
+  });
+  acceptVersion.addEventListener('click', () => {
+    if (!contentBase || !newerContent || contentSaving) return;
+    contentBase = { ...contentBase, updatedAt: newerContent.updated_at };
+    clearContentConflict();
+    say('Your edits were kept. Save again when ready.');
+  });
   document.querySelector('#load-more').addEventListener('click', () => load(true));
   document.querySelector('#new-content').addEventListener('click', () => openEditor());
-  document.querySelector('#cancel-edit').addEventListener('click', () => { editor.hidden = true; form.reset(); });
+  document.querySelector('#cancel-edit').addEventListener('click', () => { if (!contentSaving) closeContentEditor(); });
   form.elements.title.addEventListener('input', () => {
     if (!form.elements.id.value && !form.elements.slug.dataset.edited) form.elements.slug.value = form.elements.title.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0,100);
   });
   form.elements.slug.addEventListener('input', () => { form.elements.slug.dataset.edited = 'true'; });
   form.addEventListener('submit', async event => {
-    event.preventDefault(); if (!verified || !['blog', 'research'].includes(current)) return;
-    const button = form.querySelector('[type=submit]'); button.disabled = true; say('Saving…');
-    const row = { kind: current, title: form.elements.title.value.trim(), slug: form.elements.slug.value.trim(), summary: form.elements.summary.value.trim(), body: form.elements.body.value.trim(), status: form.elements.status.value, updated_at: new Date().toISOString() };
+    event.preventDefault();
+    const base = contentBase;
+    if (!verified || !base || base.kind !== current || contentSaving) return;
+    if (newerContent) { say('Review the saved version before retrying. Your edits are still here.'); return; }
+    const button = form.querySelector('[type=submit]');
+    const fields = form.elements;
+    const updatedAt = Math.max(Date.now(), (Date.parse(base.updatedAt) || 0) + 1);
+    const row = {
+      kind: base.kind, title: fields.title.value.trim(), slug: fields.slug.value.trim(),
+      summary: fields.summary.value.trim(), body: fields.body.value.trim(),
+      status: fields.status.value, updated_at: new Date(updatedAt).toISOString()
+    };
+    contentSaving = button.disabled = true;
+    say('Saving…');
     try {
-      if (!await authorize()) return;
-      const id = form.elements.id.value;
-      const query = id ? db.from('qixarc_content').update(row).eq('id', id) : db.from('qixarc_content').insert(row);
-      const { error } = await query.select('id').single();
-      if (!verified) return;
-      if (error) { say(error.code === '23505' ? 'That URL slug is already in use. Choose another.' : 'Could not save. Your edits are still here; please retry.'); return; }
-      editor.hidden = true; form.reset(); delete form.elements.slug.dataset.edited;
-      await load(); say(row.status === 'published' ? 'Published. The public page now uses this content.' : 'Draft saved. Only admins can see it.');
-    } catch { say('Connection interrupted. Your edits are still here; please retry.'); }
-    finally { button.disabled = false; }
+      if (!await authorize({ preserveOnConnectionError: true }) || contentBase !== base) return;
+      const table = db.from('qixarc_content');
+      const query = base.id
+        ? table.update(row).eq('id', base.id).eq('kind', base.kind).eq('updated_at', base.updatedAt)
+        : table.insert(row);
+      const { data, error } = await query.select('id').maybeSingle();
+      if (!verified || contentBase !== base) return;
+      if (error) {
+        say(error.code === '23505' ? 'That URL slug is already in use. Your edits are still here.' : 'Could not confirm the save. Your edits are still here.');
+        return;
+      }
+      if (!data?.id || (base.id && data.id !== base.id)) {
+        say('No changes were saved. Your edits are still here.');
+        await checkContentVersion(base);
+        return;
+      }
+      closeContentEditor();
+      await load();
+      if (verified && current === base.kind) say(row.status === 'published' ? 'Published.' : 'Draft saved.');
+    } catch (error) {
+      if (contentBase === base) say(error.message || 'Could not confirm the save. Your edits are still here.');
+    } finally {
+      contentSaving = button.disabled = false;
+    }
   });
   passwordForm.addEventListener('submit', async event => {
     event.preventDefault();

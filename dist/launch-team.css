@@ -6,22 +6,3 @@
 .scaler-launch output { display: block; margin-top: .4rem; padding-bottom: .15rem; color: #2536aa; font: clamp(1.1rem, 3vw, 1.85rem) QixMono, monospace; font-variant-numeric: tabular-nums; }
 .scaler-launch [hidden] { display: none; }
 .scaler-launch .launch-dates { margin-top: .35rem; font-size: .9rem; }
-
-.team-profile-grid .team-profile { position: relative; min-width: 0; overflow: visible; }
-.team-profile-grid .team-profile:has(details[open]) { z-index: 2; }
-.team-profile-details { width: 100%; margin-top: auto; border-top: 1px solid var(--line); }
-.team-profile-details summary { display: flex; gap: .5rem; align-items: center; justify-content: space-between; min-height: 44px; padding-top: .35rem; color: #293de2; font-size: .9rem; cursor: pointer; list-style: none; }
-.team-profile-details summary::-webkit-details-marker { display: none; }
-.team-profile-details summary:focus-visible, .team-preview a:focus-visible { outline: 2px solid #354eff; outline-offset: 3px; }
-.team-preview { display: grid; overflow: hidden; gap: .6rem; padding: .65rem; background: #fff; border: 1px solid #ccd5f0; border-radius: 13px; box-shadow: 0 15px 28px #1b296b24; }
-.team-preview img, .team-initials { width: 100%; aspect-ratio: 4 / 5; border-radius: 8px; }
-.team-preview img { display: block; object-fit: cover; object-position: center 35%; background: #eef0ff; }
-.team-initials { display: grid; place-content: center; color: #2536aa; background: #eef0ff; font-size: clamp(2rem, 5vw, 4.5rem); }
-.team-preview a { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: .2rem; color: #2536aa; font-size: .9rem; text-align: center; }
-.team-profile-details[open] .team-preview { animation: team-reveal .24s ease-out both; }
-@keyframes team-reveal { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
-@media (min-width: 761px) and (hover: hover) and (pointer: fine) {
-  .team-preview { position: absolute; top: calc(100% - .5rem); inset-inline: .75rem; }
-}
-@media (max-width: 540px) { .team-profile-grid[data-team-grid] { grid-template-columns: 1fr; } }
-@media (prefers-reduced-motion: reduce) { .team-profile-details[open] .team-preview { animation: none; } }

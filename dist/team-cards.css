@@ -1,0 +1,193 @@
+.team-profile-grid[data-team-grid] {
+  --team-flip-duration: 700ms;
+  --team-flip-ease: cubic-bezier(.4, .2, .2, 1);
+  perspective: 1250px;
+  overflow: visible;
+}
+
+.team-profile,
+.team-card-tilt,
+.team-card-lift,
+.team-card-rotor {
+  transform-style: preserve-3d;
+}
+
+.team-profile {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: clamp(270px, 25vw, 325px);
+  border-radius: 20px;
+}
+
+.team-profile:is([data-mouse-over], :focus-within, [data-turning]) { z-index: 1; }
+.team-card-tilt { position: relative; z-index: 1; pointer-events: none; }
+.team-card-tilt, .team-card-lift, .team-card-rotor { display: grid; min-width: 0; }
+
+.team-card-toggle {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+.team-card-toggle[hidden] { display: none; }
+.team-profile[data-team-ready] .team-card-toggle { z-index: 0; }
+.team-card-toggle:focus-visible {
+  outline: 3px solid #354eff;
+  outline-offset: 4px;
+}
+
+.team-card-rotor { transition: transform var(--team-flip-duration) var(--team-flip-ease); }
+.team-profile.is-flipped .team-card-rotor { transform: rotateY(180deg); }
+.team-profile[data-turning] .team-card-rotor { will-change: transform; }
+
+.team-card-face {
+  position: relative;
+  grid-area: 1 / 1;
+  min-width: 0;
+  border: 1px solid #ccd5f0;
+  border-radius: inherit;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.team-card-front, .team-card-back { border-radius: 20px; }
+.team-card-front {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 30px;
+  background: linear-gradient(145deg, #ffffffa6, #e7eaff85);
+  transform: translateZ(.1px);
+}
+
+.team-card-front h3 { font-size: clamp(30px, 3.4vw, 46px); margin: 0 0 9px; line-height: 1.1; overflow-wrap: anywhere; }
+.team-card-front p { margin: 0 0 32px; color: #566384; font-size: 14px; overflow-wrap: anywhere; }
+.team-profile-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 44px;
+  margin-top: auto;
+  padding-top: .35rem;
+  gap: 15px;
+  border-top: 1px solid var(--line);
+  color: #293de2;
+  font-size: .9rem;
+  pointer-events: auto;
+}
+.team-profile[data-team-ready] .team-profile-link { pointer-events: none; }
+
+.team-card-back {
+  display: grid;
+  align-items: end;
+  background: #171b4d;
+  transform: rotateY(180deg) translateZ(.1px);
+}
+.team-card-portrait, .team-card-initials, .team-card-portrait img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+.team-card-portrait {
+  border-radius: inherit;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 25% 10%, #3a4aaf, #131742 70%, #080d36);
+}
+.team-card-portrait img { object-fit: cover; object-position: 50% 20%; }
+.team-card-portrait img[hidden], .team-card-initials[hidden] { display: none; }
+.team-card-initials {
+  display: grid;
+  align-content: start;
+  justify-content: center;
+  padding-top: .35em;
+  color: #e8edff;
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 700;
+}
+
+.team-card-caption {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  column-gap: .6rem;
+  min-width: 0;
+  padding: 1.15rem .8rem .65rem;
+  border-radius: 0 0 19px 19px;
+  background: linear-gradient(transparent, #080d36ee 58%);
+  color: #fff;
+}
+.team-card-caption [data-team-name], .team-card-caption [data-team-role] { display: block; overflow-wrap: anywhere; }
+.team-card-caption [data-team-name] { font-size: .8rem; font-weight: 700; }
+.team-card-caption [data-team-role] { color: #e0e7ff; font-size: .68rem; }
+.team-card-caption [data-team-portfolio] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .3rem;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: .3rem .5rem;
+  border: 1px solid #9aaaff;
+  border-radius: 8px;
+  background: #262f7a;
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 650;
+  pointer-events: auto;
+}
+.team-card-caption [data-team-portfolio][hidden] { display: none; }
+.team-card-back[inert] [data-team-portfolio] { pointer-events: none; }
+.team-card-caption [data-team-portfolio]:focus-visible,
+.team-profile-link:focus-visible { outline: 3px solid #8091ff; outline-offset: 2px; }
+
+.team-card-face::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 16px 30px #222e7e2b, 0 0 0 1px #7186ff7d;
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--team-flip-duration) var(--team-flip-ease);
+}
+.team-profile.is-flipped .team-card-back::after { opacity: 1; }
+.team-profile[data-turning] .team-card-lift { animation: team-flip-lift var(--team-flip-duration) var(--team-flip-ease); }
+@keyframes team-flip-lift {
+  0%, 100% { transform: none; }
+  48% { transform: translateY(-5px) translateZ(13px) scale(1.025); }
+}
+
+@media (hover: hover) and (pointer: fine), (any-hover: hover) and (any-pointer: fine) {
+  .team-card-tilt { transition: transform .22s ease-out; }
+  .team-profile[data-mouse-over]:not(.is-flipped, [data-turning]) .team-card-tilt {
+    transform: translateY(-3px) rotateX(2.5deg) rotateY(-3.5deg);
+  }
+  .team-profile[data-mouse-over]:not(.is-flipped) .team-card-front::after { opacity: .65; }
+}
+@media (max-width: 760px) {
+  .team-card-front { padding: 25px; }
+  .team-card-front h3 { font-size: 38px; }
+}
+@media (max-width: 540px) {
+  .team-profile-grid[data-team-grid] { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .team-profile-grid[data-team-grid] { --team-flip-duration: 150ms; perspective: none; }
+  .team-card-tilt, .team-card-rotor, .team-card-face {
+    transform: none !important;
+  }
+  .team-profile[data-turning] .team-card-lift { animation: none; }
+  .team-card-face { transition: opacity var(--team-flip-duration) ease-out !important; }
+  .team-card-front { opacity: 1; }
+  .team-card-back, .team-profile.is-flipped .team-card-front { opacity: 0; }
+  .team-profile.is-flipped .team-card-back { opacity: 1; }
+}

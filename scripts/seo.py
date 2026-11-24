@@ -78,7 +78,11 @@ def apply(root):
                 post = articles[route]
                 schema = {'@context': 'https://schema.org', '@type': 'BlogPosting', '@id': url + '#article', 'headline': post['title'], 'description': post['summary'], 'datePublished': post['created_at'], 'dateModified': max(post['created_at'], post['updated_at']), 'inLanguage': 'en', 'mainEntityOfPage': {'@id': url + '#webpage'}, 'author': {'@type': 'Organization', '@id': BASE + '/#organization', 'name': 'QIXARC', 'url': BASE + '/about/'}, 'publisher': {'@id': BASE + '/#organization'}}
                 block += '<script id="cms-article-schema" type="application/ld+json">' + json.dumps(schema, ensure_ascii=False).replace('<', '\\u003c') + '</script>'
-        html = re.sub(r'/site-data.js\?v=[^" ]+', '/site-data.js?v=seo-4', html)
+        html = re.sub(r'/database.js(?:\?v=[^" ]+)?(?=")', '/database.js?v=persistence-1', html)
+        html = re.sub(r'/site-data.js\?v=[^" ]+', '/site-data.js?v=seo-5', html)
+        html = re.sub(r'<script src="/public-content.js[^"]*" defer></script>\s*', '', html)
+        if route in ('', 'about', 'products', 'blog', 'research') or route.startswith('blog/'):
+            html = html.replace('<script src="/site-data.js', '<script src="/public-content.js?v=1" defer></script>\n<script src="/site-data.js', 1)
         if '/site-data.js' in html and '/published-routes.js' not in html:
             html = html.replace('<script src="/site-data.js', '<script src="/published-routes.js" defer></script>\n<script src="/site-data.js')
         # Visible breadcrumbs and fast local fonts help navigation and rendering.
@@ -121,10 +125,14 @@ def apply(root):
             html = html.replace('src="/assets/web-opt.webp" alt="" fetchpriority="high"', 'src="/assets/web-opt.webp" alt="" width="171" height="256" fetchpriority="high" decoding="async"')
         if route != 'admin':
             html = re.sub(r'<link rel="stylesheet" href="/launch-team.css[^"]*">\s*|<script src="/(?:company-settings|launch-team).js[^"]*" defer></script>\s*', '', html)
+            html = re.sub(r'<link rel="stylesheet" href="/team-cards\.css[^"]*">\s*|<script src="/team-cards\.js[^"]*" defer></script>\s*', '', html)
         if route in ('', 'about', 'contact', 'products'):
             html = html.replace('</head>', '<link rel="stylesheet" href="/launch-team.css?v=1">\n</head>')
         if route in ('', 'about', 'products'):
-            html = html.replace('</head>', '<script src="/company-settings.js?v=1" defer></script>\n<script src="/launch-team.js?v=1" defer></script>\n</head>')
+            html = html.replace('</head>', '<script src="/company-settings.js?v=3" defer></script>\n<script src="/launch-team.js?v=3" defer></script>\n</head>')
+            if route in ('', 'about'):
+                html = html.replace('<link rel="stylesheet" href="/responsive.css', '<link rel="stylesheet" href="/team-cards.css?v=2">\n<link rel="stylesheet" href="/responsive.css', 1)
+                html = html.replace('<script src="/launch-team.js', '<script src="/team-cards.js?v=2" defer></script>\n<script src="/launch-team.js', 1)
         path.write_text(html, encoding='utf-8')
     entries = []
     for route in pages:

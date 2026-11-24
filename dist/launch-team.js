@@ -1,5 +1,6 @@
 (() => {
   const company = window.QixarcCompany;
+  const cache = window.QixarcPublicContent;
   const widgets = document.querySelectorAll('[data-scaler-launch]');
   const labels = document.querySelectorAll('[data-scaler-status]');
   const grids = document.querySelectorAll('[data-team-grid]');
@@ -37,77 +38,22 @@
     }
   }
 
-  function element(tag, text, className) {
-    const item = document.createElement(tag);
-    if (text) item.textContent = text;
-    if (className) item.className = className;
-    return item;
-  }
-
-  function profile(person) {
-    const card = element('article', null, 'team-profile');
-    const details = element('details', null, 'team-profile-details');
-    const summary = element('summary', 'View portfolio ↗');
-    const preview = element('div', null, 'team-preview');
-    const url = company.photoUrl(person.photo);
-    const portrait = url ? element('img') : element('span', person.name[0], 'team-initials');
-    if (url) { portrait.src = url; portrait.alt = ''; portrait.loading = 'lazy'; portrait.decoding = 'async'; }
-    else { portrait.setAttribute('aria-hidden', 'true'); }
-    const link = element('a', 'Open portfolio ↗');
-    link.href = person.portfolio;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.setAttribute('aria-label', 'Open ' + person.name + '’s portfolio in a new tab');
-    preview.append(portrait, link);
-    details.append(summary, preview);
-    card.append(element('h3', person.name), element('p', person.role), details);
-    return card;
-  }
-
-  function bindGrid(grid) {
-    const cards = [...grid.querySelectorAll('.team-profile')];
-    for (const card of cards) {
-      const details = card.querySelector('details');
-      let hoverOpened = false;
-      card.addEventListener('pointerenter', event => {
-        if (event.pointerType !== 'mouse' || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-        if (!details.open) { hoverOpened = true; details.open = true; }
-      });
-      card.addEventListener('pointerleave', () => {
-        if (hoverOpened && !card.contains(document.activeElement)) details.open = false;
-      });
-      card.addEventListener('focusout', event => {
-        if (hoverOpened && !card.contains(event.relatedTarget) && !card.matches(':hover')) details.open = false;
-      });
-      details.addEventListener('toggle', () => {
-        if (!details.open) { hoverOpened = false; return; }
-        for (const other of grid.querySelectorAll('details[open]')) {
-          if (other !== details) other.open = false;
-        }
-      });
-      card.addEventListener('keydown', event => {
-        if (event.key !== 'Escape' || !details.open) return;
-        details.open = false;
-        details.querySelector('summary').focus();
-      });
-    }
-  }
-  for (const grid of grids) bindGrid(grid);
+  const showRoster = [...grids].map(window.QixarcTeamCards?.mount || (() => () => {}));
+  const cachedTeam = grids.length ? company.team(cache.read('team')) : null;
+  if (cachedTeam) showRoster.forEach(show => show(cachedTeam));
   if (labels.length || widgets.length) {
     updateLaunch();
     setInterval(updateLaunch, 250);
-    if (!schedule) company.defaults().then(data => { schedule ??= company.launch(data.launch); updateLaunch(); }).catch(() => {});
+    if (!schedule) company.defaults().then(data => { schedule ??= company.launch(data.launch); updateLaunch(); }).catch(error => cache.report('Launch defaults unavailable', error));
   }
 
   company.read().then(rows => {
     schedule = company.launch(rows.launch?.payload) || schedule;
     updateLaunch();
+    if (!showRoster.length) return;
     const people = company.team(rows.team?.payload);
-    if (!people) return;
-    for (const grid of grids) {
-      if (grid.contains(document.activeElement) || grid.querySelector('details[open]')) continue;
-      grid.replaceChildren(...people.map(profile));
-      bindGrid(grid);
-    }
-  }).catch(() => {});
+    if (!people) throw new Error('Team record missing or invalid');
+    cache.write('team', people);
+    showRoster.forEach(show => show(people));
+  }).catch(error => cache.report('Live website settings unavailable', error));
 })();
