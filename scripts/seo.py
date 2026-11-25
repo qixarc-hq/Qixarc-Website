@@ -131,8 +131,8 @@ def apply(root):
         if route in ('', 'about', 'products'):
             html = html.replace('</head>', '<script src="/company-settings.js?v=3" defer></script>\n<script src="/launch-team.js?v=3" defer></script>\n</head>')
             if route in ('', 'about'):
-                html = html.replace('<link rel="stylesheet" href="/responsive.css', '<link rel="stylesheet" href="/team-cards.css?v=2">\n<link rel="stylesheet" href="/responsive.css', 1)
-                html = html.replace('<script src="/launch-team.js', '<script src="/team-cards.js?v=2" defer></script>\n<script src="/launch-team.js', 1)
+                html = html.replace('<link rel="stylesheet" href="/responsive.css', '<link rel="stylesheet" href="/team-cards.css?v=3">\n<link rel="stylesheet" href="/responsive.css', 1)
+                html = html.replace('<script src="/launch-team.js', '<script src="/team-cards.js?v=3" defer></script>\n<script src="/launch-team.js', 1)
         path.write_text(html, encoding='utf-8')
     entries = []
     for route in pages:

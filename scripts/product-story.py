@@ -74,23 +74,31 @@ def team_profiles():
         href = f' href="{url}"' if usable else ''
         link_attrs = f'{href} target="_blank" rel="noopener noreferrer" aria-label="Open {name}’s portfolio in a new tab"'
         photo_src = f' src="{photo}"' if photo else ' hidden'
+        mobile_photo = person['photo'].removesuffix('.webp') + '-mobile-320.webp'
+        mobile_srcset = ''
+        if person['photo'].startswith('/assets/') and (Path(__file__).resolve().parents[1] / 'dist' / mobile_photo.lstrip('/')).is_file():
+            mobile_srcset = f' srcset="{escape(mobile_photo)} 320w, {photo} 576w"'
         initials = ''.join(part[0] for part in person['name'].split()[:2]).upper()
         placeholder_hidden = ' hidden' if photo else ''
+        portfolio_hidden = ' hidden' if not usable else ''
         cards.append(f'''<article class="team-profile" data-team-id="{member_id}">
-          <button class="team-card-toggle" type="button" aria-label="Flip card for {name}" aria-pressed="false" hidden></button>
+          <button class="team-card-toggle" type="button" aria-label="Flip card for {name}" hidden></button>
           <div class="team-card-tilt"><div class="team-card-lift"><div class="team-card-rotor">
-            <div class="team-card-face team-card-front" aria-hidden="false">
+            <div class="team-card-face team-card-front">
               <h3 data-team-name>{name}</h3><p data-team-role>{role}</p>
               <a class="team-profile-link" data-team-front-link{link_attrs}>View portfolio <span aria-hidden="true">↗</span></a>
             </div>
-            <div class="team-card-face team-card-back" aria-hidden="true" inert>
+            <div class="team-card-face team-card-back">
               <div class="team-card-portrait">
                 <span class="team-card-initials" aria-hidden="true"{placeholder_hidden}>{escape(initials)}</span>
-                <img data-team-photo{photo_src} width="576" height="720" alt="" loading="lazy" decoding="async">
+                <picture>
+                  <source data-team-mobile-photo media="(hover: none), (max-width: 767px)" sizes="(max-width: 767px) calc((100vw - 32px) * .63), 810px"{mobile_srcset}>
+                  <img data-team-photo{photo_src} width="576" height="720" alt="" loading="lazy" decoding="async">
+                </picture>
               </div>
               <div class="team-card-caption">
                 <div><span data-team-name>{name}</span><span data-team-role>{role}</span></div>
-                <a data-team-portfolio{link_attrs} tabindex="-1">Open portfolio <span aria-hidden="true">↗</span></a>
+                <a data-team-portfolio{link_attrs}{portfolio_hidden}>Open portfolio <span aria-hidden="true">↗</span></a>
               </div>
             </div>
           </div></div></div>

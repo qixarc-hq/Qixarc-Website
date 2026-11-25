@@ -2,6 +2,7 @@
   const company = window.QixarcCompany;
   const cache = window.QixarcPublicContent;
   const animations = new WeakMap();
+  const staticCards = matchMedia('(hover: none), (max-width: 767px)');
   const canHover = matchMedia('(hover: hover) and (pointer: fine), (any-hover: hover) and (any-pointer: fine)');
   let openCard, openBy, hoverTimer, hoverCard, mouseOverCard, lastPointerType;
   let restoringFocus = false;
@@ -43,20 +44,21 @@
     hoverCard = null;
   }
 
-  function focusTrigger(card) {
+  function focusCard(card) {
+    const target = card.querySelector(staticCards.matches ? '[data-team-portfolio]:not([hidden])' : '.team-card-toggle');
     restoringFocus = true;
-    card.querySelector('.team-card-toggle').focus({ preventScroll: true });
+    target?.focus({ preventScroll: true });
     restoringFocus = false;
   }
 
   function show(card, source) {
     clearHover();
-    if (openCard === card) return;
+    if (staticCards.matches || openCard === card) return;
     const previous = openCard;
     openCard = card;
     openBy = source;
     if (previous) {
-      if (previous.querySelector('.team-card-back').contains(document.activeElement)) focusTrigger(previous);
+      if (previous.querySelector('.team-card-back').contains(document.activeElement)) focusCard(previous);
       setFlip(previous, false);
     }
     if (openCard) setFlip(openCard, true);
@@ -70,20 +72,52 @@
     const fallbackPhotos = new Map(initial.map(card => [
       card.dataset.teamId, card.querySelector('[data-team-photo]').getAttribute('src')
     ]));
+    const mobileSources = new Map(initial.map(card => [
+      fallbackPhotos.get(card.dataset.teamId), card.querySelector('[data-team-mobile-photo]').getAttribute('srcset')
+    ]));
     const portraitOwners = new Map([...fallbackPhotos].filter(([,photo]) => photo).map(([id,photo]) => [photo,id]));
     let order = initial;
 
-    function bind(card) {
+    function configureMode(card) {
       const trigger = card.querySelector('.team-card-toggle');
       const frontLink = card.querySelector('[data-team-front-link]');
+      const front = card.querySelector('.team-card-front');
+      const back = card.querySelector('.team-card-back');
+      const portfolio = back.querySelector('[data-team-portfolio]');
+      clearTimeout(animations.get(card));
+      card.classList.remove('is-flipped');
+      card.removeAttribute('data-turning');
+      card.removeAttribute('data-mouse-over');
+      trigger.hidden = staticCards.matches;
+
+      if (staticCards.matches) {
+        trigger.removeAttribute('aria-pressed');
+        for (const element of [front, back, frontLink, portfolio]) {
+          element.removeAttribute('aria-hidden');
+          element.removeAttribute('inert');
+          element.removeAttribute('tabindex');
+        }
+      } else {
+        trigger.setAttribute('aria-pressed', 'false');
+        frontLink.inert = true;
+        frontLink.tabIndex = -1;
+        setFace(front, true);
+        setFace(back, false);
+      }
+    }
+
+    function bind(card) {
       const photo = card.querySelector('[data-team-photo]');
+      const mobilePhoto = card.querySelector('[data-team-mobile-photo]');
       const placeholder = card.querySelector('.team-card-initials');
       card.setAttribute('data-team-ready', '');
-      trigger.hidden = false;
-      frontLink.inert = true;
-      frontLink.tabIndex = -1;
-      const showPhoto = () => { placeholder.hidden = true; };
+      configureMode(card);
+      const showPhoto = () => { photo.hidden = false; placeholder.hidden = true; };
       const showPlaceholder = () => {
+        if (staticCards.matches && mobilePhoto.hasAttribute('srcset')) {
+          mobilePhoto.removeAttribute('srcset');
+          return;
+        }
         photo.hidden = true;
         placeholder.hidden = false;
         cache.report('Team portrait could not be loaded', new Error('image unavailable'));
@@ -93,7 +127,7 @@
       if (photo.hasAttribute('src') && photo.complete && !photo.naturalWidth) showPlaceholder();
 
       const beginHover = event => {
-        if (event.pointerType !== 'mouse' || !canHover.matches || mouseOverCard === card) return;
+        if (staticCards.matches || event.pointerType !== 'mouse' || !canHover.matches || mouseOverCard === card) return;
         mouseOverCard = card;
         card.setAttribute('data-mouse-over', '');
         if (openCard === card) return;
@@ -114,6 +148,7 @@
 
     function update(card, person, occupiedPhotos) {
       const photo = card.querySelector('[data-team-photo]');
+      const mobilePhoto = card.querySelector('[data-team-mobile-photo]');
       const placeholder = card.querySelector('.team-card-initials');
       photo.style.objectPosition = company.photoFocus(person.photoFocus) || '';
       for (const name of card.querySelectorAll('[data-team-name]')) name.textContent = person.name;
@@ -129,9 +164,10 @@
       }
       const back = card.querySelector('.team-card-back');
       const link = back.querySelector('[data-team-portfolio]');
-      if (!href && link === document.activeElement) focusTrigger(card);
+      const linkWasFocused = link === document.activeElement;
       link.hidden = !href;
-      link.tabIndex = href && !back.inert ? 0 : -1;
+      if (!staticCards.matches) link.tabIndex = href && !back.inert ? 0 : -1;
+      if (!href && linkWasFocused) focusCard(card);
 
       const candidate = company.photoUrl(person.photo);
       const ownFallback = fallbackPhotos.get(person.id);
@@ -142,7 +178,11 @@
         placeholder.hidden = false;
         photo.hidden = false;
         photo.src = src;
+        const srcset = mobileSources.get(src);
+        if (srcset) mobilePhoto.setAttribute('srcset', srcset);
+        else mobilePhoto.removeAttribute('srcset');
       } else if (!src) {
+        mobilePhoto.removeAttribute('srcset');
         photo.removeAttribute('src');
         photo.hidden = true;
         placeholder.hidden = false;
@@ -168,9 +208,19 @@
     }
 
     initial.forEach(bind);
+    staticCards.addEventListener('change', () => {
+      const focused = document.activeElement?.closest('[data-team-id]');
+      clearHover();
+      openCard = openBy = mouseOverCard = null;
+      grid.setAttribute('data-team-switching', '');
+      cards.forEach(configureMode);
+      if (order.includes(focused)) focusCard(focused);
+      reorder();
+      requestAnimationFrame(() => requestAnimationFrame(() => grid.removeAttribute('data-team-switching')));
+    });
     grid.addEventListener('team-flip-settled', reorder);
     grid.addEventListener('focusin', event => {
-      if (restoringFocus || !event.target.matches(':focus-visible')) return;
+      if (staticCards.matches || restoringFocus || !event.target.matches(':focus-visible')) return;
       const card = event.target.closest('[data-team-id]');
       if (!card) return;
       show(card, 'keyboard');
@@ -181,6 +231,7 @@
           !openCard.contains(event.relatedTarget)) show(null);
     });
     grid.addEventListener('click', event => {
+      if (staticCards.matches) return;
       const trigger = event.target.closest('.team-card-toggle');
       if (!trigger) return;
       const keyboard = event.detail === 0;
@@ -229,11 +280,12 @@
       }
       order = people.map(person => byId.get(person.id));
       reorder();
-      if (restoreFocus && order.length) focusTrigger(order[0]);
+      if (restoreFocus && order.length) focusCard(order[0]);
     };
   }
 
   document.addEventListener('pointerdown', event => {
+    if (staticCards.matches) return;
     lastPointerType = event.pointerType;
     if (event.pointerType === 'touch' || event.pointerType === 'pen') {
       clearHover();
