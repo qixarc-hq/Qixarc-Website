@@ -60,7 +60,7 @@ def apply(root):
                 block += f'<meta property="og:url" content="{url}">\n'
             for name, value in [('card', 'summary'), ('title', title), ('description', description), ('image', BASE + '/assets/qixarc-logo.webp'), ('image:alt', 'QIXARC logo')]:
                 block += f'<meta name="twitter:{name}" content="{escape(value, quote=True)}">\n'
-            organization = {'@type': 'Organization', '@id': BASE + '/#organization', 'name': 'QIXARC', 'url': BASE + '/', 'logo': BASE + '/assets/qixarc-logo.webp', 'email': 'help@qixarc.com', 'telephone': '+91-83007-15081', 'address': postal_address(), 'sameAs': ['https://www.linkedin.com/in/qixarc-%E2%80%8E-27751b3ba', 'https://www.instagram.com/qixarc', 'https://x.com/QIXARC']}
+            organization = {'@type': 'Organization', '@id': BASE + '/#organization', 'name': 'QIXARC', 'url': BASE + '/', 'logo': BASE + '/assets/qixarc-logo.webp', 'email': 'help@qixarc.com', 'telephone': '+91-83007-15081', 'address': postal_address(), 'sameAs': ['https://in.linkedin.com/company/qixarc', 'https://www.instagram.com/qixarc', 'https://x.com/QIXARC']}
             graph = [organization, {'@type': 'WebSite', '@id': BASE + '/#website', 'url': BASE + '/', 'name': 'QIXARC', 'publisher': {'@id': BASE + '/#organization'}}]
             if route in pages:
                 page_type = {'about': 'AboutPage', 'contact': 'ContactPage', 'blog': 'CollectionPage', 'research': 'CollectionPage', 'products': 'CollectionPage'}.get(route, 'WebPage')
