@@ -12,19 +12,19 @@ products = [
     ('scaler-profile', 'Scaler Profile', 'Early access scheduled', 'Messaging automation',
      'A focused platform for businesses and creators to manage WhatsApp, Instagram and email conversations, capture leads and automate follow-ups.',
      ['Channel replies and routing', 'Lead tracking and customer engagement', 'Workflow automation with human handoff'],
-     'See the rollout schedule below and visit the website for access.', 'scaler.html'),
+     'See the rollout schedule below and visit the website for access.'),
     ('zevaris-ai', 'Zevaris AI', 'Coming soon', 'AI assistance & automation',
      'An AI platform in development for businesses and individuals, bringing everyday automation, timely insights and intelligent assistance into one place.',
      ['AI assistance for practical tasks', 'Automation for routine work', 'Real-time analytics and recommendations'],
-     'The brand and coming-soon presence are live. Work is underway on the AI, automation and analytics foundations.', 'zevaris.html'),
+     'The brand and coming-soon presence are live. Work is underway on the AI, automation and analytics foundations.'),
     ('serlow', 'Serlow', 'Play Store launch pending', 'Collaborative workspace',
      'A notes and visual workspace for capturing ideas, drawing on a canvas, recording meetings and collaborating in a pixel-art workplace.',
      ['Notes and canvas', 'Meeting recordings', 'A shared pixel-art workspace'],
-     'Android beta v1.0.10 is available from the Serlow preview site. The Google Play Store launch is pending.', 'serlow.html'),
+     'Android beta v1.0.10 is available from the Serlow preview site. The Google Play Store launch is pending.'),
     ('decision-sphere', 'Decision Sphere', 'Coming Soon', 'Agentic AI for mobile',
      'An agentic AI for mobile devices, being built to help you control your phone through voice commands or text input.',
      ['Execute phone tasks from spoken or typed instructions', 'Summarize messages and streamline everyday workflows', 'Explore options and get support with everyday decisions'],
-     'Currently in development. These are planned capabilities; Decision Sphere is not yet available to use.', 'decisionsphere.html')
+     'Currently in development. These are planned capabilities; Decision Sphere is not yet available to use.')
 ]
 
 def product_mark(slug, title):
@@ -36,7 +36,7 @@ def product_mark(slug, title):
 
 def product_page(hero, cta):
     sections = []
-    for index, (slug, title, status, category, description, features, progress, source) in enumerate(products, 1):
+    for index, (slug, title, status, category, description, features, progress) in enumerate(products, 1):
         privacy = '<p class="product-privacy"><strong>Your phone. Your permissions.</strong> Decision Sphere is being designed around transparent, permission-based access. You choose exactly which mobile data and applications it can access.</p>' if slug == 'decision-sphere' else ''
         action = '<a class="text-link" href="/contact/">Ask about this product ↗</a>'
         extra = ''
@@ -58,8 +58,7 @@ def product_page(hero, cta):
         <div class="catalogue-art art-{slug}">{product_mark(slug, title)}<span class="catalogue-number">0{index} / QIXARC</span></div>
         <div class="catalogue-copy"><span class="status-chip"{status_data}>{status}</span><h2>{title}</h2><span class="section-label">{category}</span><p>{description}</p>
         <ul>{''.join(f'<li>{feature}</li>' for feature in features)}</ul>{privacy}<p class="product-progress">{progress}</p>{extra}
-        <div class="product-actions"><a class="text-link" href="https://kabibalansportfolio.vercel.app/{source}" target="_blank" rel="noopener">Read the product case study ↗</a>
-        {action}</div></div></article>''')
+        <div class="product-actions">{action}</div></div></article>''')
     return ('Products', 'Explore QIXARC’s Scaler Profile, Zevaris AI, Serlow and Decision Sphere, with current development stages and product capabilities.',
         hero('03', 'THE PRODUCT LINEUP', 'Four products.<br>One builder’s mindset.', 'Messaging, intelligent assistance, collaboration and decisions. Explore what each QIXARC product is being built to do.') +
         '<nav class="wrap catalogue-index" aria-label="Product index">'+''.join(f'<a href="#{p[0]}">{p[1]} ↘</a>' for p in products)+'</nav>' + ''.join(sections) +
@@ -108,7 +107,7 @@ def team_profiles():
 
 def home_products():
     cards = []
-    for slug, title, status, category, description, features, progress, source in products:
+    for slug, title, status, category, description, features, progress in products:
         status_data = ' data-scaler-status' if slug == 'scaler-profile' else ''
         cards.append(f'<a class="home-product-card" href="/products/#{slug}"><div class="home-product-art art-{slug}">{product_mark(slug,title)}</div><div class="home-product-info"><span class="section-label"{status_data}>{status}</span><h3>{title} <span aria-hidden="true">↗</span></h3><p>{category}</p></div></a>')
     return '<section class="work wrap section" id="products"><div class="section-heading"><div><div class="section-label">02 / OUR PRODUCTS</div><h2>Built to solve.<br>Designed to grow.</h2></div><p>Explore the QIXARC product lineup.</p></div><div class="home-product-grid">'+''.join(cards)+'</div></section>'
@@ -139,5 +138,5 @@ def story_page(hero, cta):
     return ('Story', 'Let QBit guide you through QIXARC’s beginnings, founder Kabibalan S, and the products taking shape today.',
         hero('02', 'THE QIXARC STORY', 'Every idea<br>starts somewhere.', 'Meet QBit, your guide to the people, questions and products behind QIXARC.') +
         '<section class="wrap story-experience" aria-label="QBit tells the QIXARC story"><div class="story-host"><span class="section-label">QBIT / YOUR STORYTELLER</span><div class="story-bot"><div class="story-bot-fallback" aria-hidden="true"><span>● &nbsp; ●</span></div><canvas id="qbit-story-canvas" aria-label="Animated QBit robot"></canvas></div><p>“Come along. I’ll show you<br>how the pieces connect.”</p><button class="text-link" id="story-motion" type="button" aria-pressed="false" hidden>Pause QBit Ⅱ</button></div><div class="story-reader qbit-intro" id="story-reader"><span class="section-label">MEET QBIT / YOUR QIXARC COMPANION</span><h2>A little curiosity.<br>A friendly guide.</h2><p class="qbit-narration">“Hi, I’m QBit — the little blue companion you’ll meet around QIXARC. I’m here to help you find your way, explore what we’re building and get to know the people and ideas behind it.”</p><div class="story-context"><h3>Small bot. Shared curiosity.</h3><p>QBit brings a friendly face to our love of design and technology. With a curious expression and a little motion, our digital mascot makes exploring QIXARC feel more personal.</p><h3>Always nearby.</h3><p>Look for QBit in the bottom-right corner to explore the website’s sections. Here on the Story page, follow our blue companion along the timeline as QIXARC’s journey unfolds.</p></div><a class="text-link" href="#story-timeline-title">Follow our journey <span aria-hidden="true">↓</span></a></div></section>' +
-        story_timeline() + '<p class="wrap story-source">Story milestones based on <a href="https://kabibalansportfolio.vercel.app/" target="_blank" rel="noopener">Kabibalan’s portfolio ↗</a>.</p>' +
+        story_timeline() + '<p class="wrap story-source">Story milestones based on <a href="https://kabibalan.vercel.app/" target="_blank" rel="noopener noreferrer">Kabibalan’s portfolio ↗</a>.</p>' +
         cta('Meet the products in the story.', 'Explore their purpose, progress and next steps.', '/products/', 'Explore the lineup'))

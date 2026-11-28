@@ -8,7 +8,7 @@ Story now follows Home in the navbar. `/story/` provides five QBit-narrated
 chapters with chapter selection and animation controls. The landing page and
 `/products/` include Scaler Profile, Zevaris AI, Serlow and DecisionSphere.
 Their copy and development statuses are based on Kabibalan's portfolio:
-https://kabibalansportfolio.vercel.app/. Edit this content in
+https://kabibalan.vercel.app/. Edit this content in
 `scripts/product-story.py`, then regenerate with `scripts/build-pages.py`.
 
 `dist/about-motion.js` adds pointer-responsive tilt to the brand cards;
